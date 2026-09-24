@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\LikeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +18,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+//BookController
+Route::resource('books', BookController::class)
+    ->only(['index','show']);
+
+Route::middleware('auth')->group(function () {
+    Route::resource('books', BookController::class)
+        ->only([
+           'create','store','edit','update','destroy'
+        ]);
+
+//ReviewController
+    Route::resource('reviews',ReviewController::class)
+        ->only(['store','edit','update','destroy']);
+    Route::get('books/{book}/reviews/create',[ReviewController::class,'create'])->name('reviews.create');
+
+//FavoriteController
+    Route::post('/books/{book}/favorites',[FavoriteController::class,'toggle'])
+        ->name('favorites.toggle');
+
+//LikeController
+    Route::post('reviews/{review}/likes',[LikeController::class,'store'])->name('likes.store');
+    Route::delete('reviews/{review}/likes',[LikeController::class,'destroy'])->name('likes.destroy');
 });

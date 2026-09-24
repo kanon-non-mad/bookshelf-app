@@ -23,7 +23,7 @@ class StoreReviewRequest extends FormRequest
     {
         return [
             'content' => ['nullable','string'],
-            'rating' => ['nullable','max:5','min:1','numeric'],
+            'rating' => ['required','max:5','min:1','numeric'],
             'book_id' => ['required','integer','exists:books,id'],
         ];
     }

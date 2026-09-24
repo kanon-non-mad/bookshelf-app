@@ -22,7 +22,7 @@ class BookController extends Controller
     {
         $genres = Genre::all();
 
-	return view('books.create',compact('genres'));
+	    return view('books.create',compact('genres'));
     }
 
     public function store(StoreBookRequest $request)
@@ -30,7 +30,7 @@ class BookController extends Controller
         $data = $request->validated();
 	    $genreIds = $data['genres'];
 	    unset($data['genres']);
-	    $data['user_id'] = Auth::id();
+	    $data['user_id'] = $request->user()->id;
 	    $book = Book::create($data);
 	    $book->genres()->sync($genreIds);
 
@@ -63,7 +63,6 @@ class BookController extends Controller
 	    $book->genres()->sync($genreIds);
 
 	    return redirect()->route('books.index');
-
     }
 
     public function destroy(Book $book)
