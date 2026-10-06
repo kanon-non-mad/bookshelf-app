@@ -7,19 +7,38 @@ use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreBookRequest;
+use App\Http\Resources\BookResource;
+use App\Http\Resources\BookDetailResource;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\JsonResponse;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('genres')
-              ->latest()
-              ->paginate(10);
-        return response()->json($books);
+        $keyword = $request->query('keyword');
+        $genreId = $request->query('genre_id');
+        $query = Book::with('genres');
+            
+        if (!empty($keyword)) {
+            $query->where(function($query) use ($keyword) {
+                $query->where('title', 'LIKE', "%{$keyword}%")
+                ->orWhere('author', 'LIKE', "%{$keyword}%");
+            });
+        }
+        if(!empty($genreIds)) {
+            $query->whereHas('genres', function ($query) use ($genreIds) {
+                $query->whereIn('genres.id',$genreIds);
+            });
+        }
+        $books = $query
+            ->withCount('reviews')
+            ->withAvg('reviews','rating')
+            ->paginate(10);
+        return BookResource::collection($books);
     }
 
     /**
@@ -38,7 +57,9 @@ class BookController extends Controller
 
         return response()->json([
                 'message' => 'Book created successfully.',
-                'data' => $book->load('genres')
+                'data' => new BookResource(
+                $book->load('genres')
+                )
             ], 201);
     }
 
@@ -48,10 +69,15 @@ class BookController extends Controller
     public function show(Book $book)
     {
         $book -> load([
-            'genres','reviews.user','reviews.likes',
+            'genres',
+            'reviews' => function ($query) {
+                $query
+                    ->with('user')
+                    ->withCount('likes');
+            },
         ]);
 
-        return response()->json($book);
+        return new BookDetailResource($book);
     }
 
     /**
@@ -59,6 +85,7 @@ class BookController extends Controller
      */
     public function update(StoreBookRequest $request, Book $book):BookResource|JsonResponse
     {
+        $this->authorize('update', $book);
         $data = $request->validated();
 	    $genreIds = $data['genres']??[];
 	    unset($data['genres']);
@@ -67,7 +94,9 @@ class BookController extends Controller
 
         return response()->json([
             'message' => 'Book updated successfully.',
-            'data' => $book->load('genres'),
+            'data' => new BookResource(
+                $book->load('genres')
+            )
         ],200);
     }
 
@@ -76,6 +105,7 @@ class BookController extends Controller
      */
     public function destroy(Book $book):JsonResponse
     {
+        $this->authorize('delete', $book);
         DB::transaction(function() use ($book){
         foreach ($book->reviews as $review) {
             $review->likes()->delete();

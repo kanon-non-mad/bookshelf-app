@@ -2,6 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Api\V1\BookController;
+use App\Http\Resources\BookResource;
+use App\Http\Resources\BookDetailResource;
+use App\Http\Controllers\Api\V1\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +19,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::prefix('v1')->group(function () {
+    Route::post('auth/login',[AuthController::class,'login']);
+    Route::apiResource('books', BookController::class)
+    ->only(['index','show']);
+
+    Route::middleware('auth:sanctum')->group(function() {
+        Route::apiResource('books', BookController::class)
+        ->only(['store','update','destroy']);
+    });
 });
