@@ -22,14 +22,14 @@ Route::get('/', function () {
     return redirect()->route('books.index');
 });
 
+
 //BookController
 Route::middleware('auth')->group(function () {
     Route::resource('books', BookController::class)
         ->only([
            'create','store','edit','update','destroy'
         ]);
-Route::resource('books', BookController::class)
-    ->only(['index','show']);
+
 
 //ReviewController
     Route::resource('reviews',ReviewController::class)
@@ -44,3 +44,6 @@ Route::resource('books', BookController::class)
     Route::post('reviews/{review}/likes',[LikeController::class,'store'])->name('likes.store');
     Route::delete('reviews/{review}/likes',[LikeController::class,'destroy'])->name('likes.destroy');
 });
+
+Route::resource('books', BookController::class)
+    ->only(['index','show']);
