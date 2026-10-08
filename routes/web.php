@@ -32,8 +32,9 @@ Route::middleware('auth')->group(function () {
 
 
 //ReviewController
+    Route::post('books/{book}/reviews',[ReviewController::class,'store'])->name('reviews.store');
     Route::resource('reviews',ReviewController::class)
-        ->only(['store','edit','update','destroy']);
+        ->only(['edit','update','destroy']);
     Route::get('books/{book}/reviews/create',[ReviewController::class,'create'])->name('reviews.create');
 
 //FavoriteController

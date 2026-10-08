@@ -24,7 +24,6 @@ class StoreReviewRequest extends FormRequest
         return [
             'content' => ['nullable','string'],
             'rating' => ['required','between:1,5','numeric'],
-            'book_id' => ['required','integer','exists:books,id'],
         ];
     }
 }

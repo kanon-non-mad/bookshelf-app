@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    public function store(StoreReviewRequest $request)
+    public function store(StoreReviewRequest $request, Book $book)
     {
         $data = $request->validated(); 
         $data['user_id'] = Auth::id();
-        $review = Review::create($data);
+        $data['book_id'] = $book->id;
+        Review::create($data);
     
-        return redirect()->route('books.show', $review->book_id);
+        return redirect()->route('books.show', $book);
     }
 
     public function create( Book $book )

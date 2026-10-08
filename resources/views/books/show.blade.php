@@ -118,11 +118,11 @@
                                         @enderror
                                     </div>
                                     <div class="mb-4">
-                                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">コメント</label>
-                                        <textarea name="comment" id="comment" rows="3"
+                                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">コメント</label>
+                                        <textarea name="content" id="content" rows="3"
                                             class="border-gray-300 rounded-md shadow-sm w-full"
-                                            placeholder="この書籍の感想を書いてください">{{ old('comment') }}</textarea>
-                                        @error('comment')
+                                            placeholder="この書籍の感想を書いてください">{{ old('content') }}</textarea>
+                                        @error('content')
                                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -148,21 +148,22 @@
                                             <div>
                                                 <span class="font-semibold">{{ $review->user->name }}</span>
                                                 <span class="text-yellow-500 ml-2">
-                                                    {{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}
+                                                    {{ str_repeat('★', (int) $review->rating) }}{{ str_repeat('☆', 5 - (int) $review->rating) }}
                                                 </span>
                                             </div>
                                             <span class="text-sm text-gray-500">{{ $review->created_at->format('Y/m/d') }}</span>
                                         </div>
-                                        @if($review->comment)
-                                            <p class="text-gray-700">{{ $review->comment }}</p>
+                                        @if($review->content)
+                                            <p class="text-gray-700">{{ $review->content }}</p>
                                         @endif
 
                                         <div class="mt-3 flex items-center justify-between">
                                             <!-- いいねボタン -->
                                             @auth
                                                 @if(Auth::user()->likedReviews->contains($review->id))
-                                                    <form action="{{ route('reviews.like', $review) }}" method="POST" class="inline" novalidate>
+                                                    <form action="{{ route('likes.destroy', $review) }}" method="POST" class="inline" novalidate>
                                                         @csrf
+                                                        @method('DELETE')
                                                         <button type="submit" class="text-blue-500 hover:text-blue-700 text-sm flex items-center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
@@ -171,7 +172,7 @@
                                                         </button>
                                                     </form>
                                                 @else
-                                                    <form action="{{ route('reviews.like', $review) }}" method="POST" class="inline" novalidate>
+                                                    <form action="{{ route('likes.store', $review) }}" method="POST" class="inline" novalidate>
                                                         @csrf
                                                         <button type="submit" class="text-gray-500 hover:text-blue-500 text-sm flex items-center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
