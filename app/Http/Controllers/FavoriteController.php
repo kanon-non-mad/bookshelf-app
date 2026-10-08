@@ -8,6 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
+	public function index()
+	{
+		$books = Auth::user()
+			->favoriteBooks()
+			->paginate(12);
+		
+		return view('favorites.index', compact('books'));
+	}
+
     public function toggle(Book $book)
     {
         if (Favorite::where([
