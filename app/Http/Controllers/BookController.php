@@ -56,6 +56,7 @@ class BookController extends Controller
 
     public function update(StoreBookRequest $request, Book $book)
     {
+        $this->authorize('update', $book);
         $data = $request->validated();
 	    $genreIds = $data['genres'];
 	    unset($data['genres']);
@@ -67,6 +68,7 @@ class BookController extends Controller
 
     public function destroy(Book $book)
     {
+        $this->authorize('delete', $book);
         foreach ($book->reviews as $review) {
             $review->likes()->delete();
         }
