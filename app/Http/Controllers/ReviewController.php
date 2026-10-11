@@ -32,6 +32,8 @@ class ReviewController extends Controller
 
     public function update(StoreReviewRequest $request, Review $review)
     {
+        $this->authorize('update', $review);
+
   	    $data = $request->validated();
 	    $review->update($data);
   	
@@ -40,6 +42,8 @@ class ReviewController extends Controller
 
     public function destroy(Review $review)
     {
+        $this->authorize('update', $review);
+        
         $review->likes()->delete();
 	    $review->delete();
 	
