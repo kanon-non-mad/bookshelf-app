@@ -15,6 +15,28 @@ class GenreTest extends TestCase
     /**
      * A basic feature test example.
      */
+    public function test_ジャンル一覧を表示できる(): void 
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $response = $this->get('/genres');
+
+        $response->assertStatus(200);
+
+        $response->assertViewHas('genres');
+    }
+
+    public function test_未ログインではジャンル一覧を表示できない(): void
+    {
+        $response = $this->get('/genres');
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect('/login');
+    }
+    
     public function test_ジャンル登録成功(): void
     {
         $user = User::factory()->create();
