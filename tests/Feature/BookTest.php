@@ -43,6 +43,15 @@ class BookTest extends TestCase
         $response->assertSee($book->published_at);
     }
 
+    public function test_未ログインでは書籍登録画面に入れない(): void
+    {
+        $response = $this->get('/books/create');
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect('/login');
+    }
+
     public function test_書籍登録画面表示(): void
     {
         $user = User::factory()->create();
@@ -61,9 +70,8 @@ class BookTest extends TestCase
         $user = User::factory()->create();
 
         $genre = Genre::create([
-        'name' => '技術書',
+            'name' => '技術書',
         ]);
-
         $this->actingAs($user);
 
         $data = [
@@ -72,7 +80,7 @@ class BookTest extends TestCase
         'author' => '著者',
         'published_at' => '2026-01-01',
         'description' => 'テスト用',
-        'genres' => [1],
+        'genres' => [$genre->id],
         ];
 
         $response = $this->post('/books',$data);
@@ -219,7 +227,6 @@ class BookTest extends TestCase
         'author' => '著者',
         'published_at' => '2026-01-01',
         'description' => 'テスト用',
-        'genres' => [1],
         ];
 
         $response = $this->delete("/books/{$book->id}");

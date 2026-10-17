@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
 
 //LikeController
     Route::post('reviews/{review}/likes',[LikeController::class,'toggle'])
-    ->name('likes.toggle');
+    ->name('likes.store');
 });
 
 Route::resource('books', BookController::class)

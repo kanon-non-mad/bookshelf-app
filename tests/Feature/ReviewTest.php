@@ -15,6 +15,24 @@ class ReviewTest extends TestCase
     /**
      * A basic feature test example.
      */
+    public function test_自分のレビュー編集画面表示(): void
+    {
+        $user = User::factory()->create();
+
+        $book = Book::factory()->create();
+
+        $this->actingAs($user);
+
+        $review = Review::factory()->create([
+            'user_id'=>$user->id,
+            'book_id'=>$book->id,
+        ]);
+
+        $response = $this->get("/reviews/{$review->id}/edit");
+
+        $response->assertStatus(200);
+    }
+    
     public function test_レビュー登録成功(): void
     {
         $user = User::factory()->create();
@@ -40,7 +58,45 @@ class ReviewTest extends TestCase
         ]);
     }
 
-    public function test_必須項目が空の時、レビューが登録できない(): void {
+    public function test_同じ本に複数レビューできる(): void
+    {
+        $user = User::factory()->create();
+
+        $book = Book::factory()->create();
+
+        Review::create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'content' => '1回目',
+            'rating' => 5,
+        ]);
+
+        Review::create([
+            'user_id' => $user->id,
+            'book_id' => $book->id,
+            'content' => '2回目',
+            'rating' => 4,
+        ]);
+
+        $this->assertDatabaseCount('reviews',2);
+    }
+
+    public function test_未ログインではレビュー投稿できない(): void
+    {
+        $book = Book::factory()->create();
+
+        $response = $this->post("/books/{$book->id}/reviews",[
+            'content' => 'テスト',
+            'rating' => 5,
+        ]);
+
+        $response->assertStatus(302);
+
+        $response->assertRedirect('/login');
+    }
+
+    public function test_必須項目が空の時、レビューが登録できない(): void 
+    {
         $user = User::factory()->create();
 
         $book = Book::factory()->create(['user_id' => $user->id]);
