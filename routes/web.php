@@ -47,8 +47,8 @@ Route::middleware('auth')->group(function () {
         ->name('favorites.toggle');
 
 //LikeController
-    Route::post('reviews/{review}/likes',[LikeController::class,'store'])->name('likes.store');
-    Route::delete('reviews/{review}/likes',[LikeController::class,'destroy'])->name('likes.destroy');
+    Route::post('reviews/{review}/likes',[LikeController::class,'toggle'])
+    ->name('likes.toggle');
 });
 
 Route::resource('books', BookController::class)

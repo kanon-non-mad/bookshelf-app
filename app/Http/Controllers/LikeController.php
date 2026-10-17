@@ -8,23 +8,24 @@ use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
-    public function store(Review $review)
+    public function toggle(Review $review)
     {
-	$data = [
-        'user_id' => Auth::id(),
-	    'review_id' => $review->id,
-		];
-	Like::create($data);
-	return redirect()->route('books.show',$review->book_id);
-    }
-
-    public function destroy(Review $review)
-    {
-	Like::where([
+		if (Like::where([
     		'user_id' => Auth::id(),
     		'review_id' => $review->id,
-		])->delete();
+		])->exists()){
 
+	        Like::where([
+	         'user_id' => Auth::id(),
+	         'review_id' => $review->id,
+		    ])->delete();
+
+   	    } else {
+	        Like::create([
+	            'user_id' => Auth::id(),
+	            'review_id' => $review->id,
+		    ]);
+    	}
 	return redirect()->route('books.show',$review->book_id);
 
     }
