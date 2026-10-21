@@ -29,9 +29,9 @@ class BookController extends Controller
                 ->orWhere('author', 'LIKE', "%{$keyword}%");
             });
         }
-        if(!empty($genreIds)) {
-            $query->whereHas('genres', function ($query) use ($genreIds) {
-                $query->whereIn('genres.id',$genreIds);
+        if(!empty($genreId)) {
+            $query->whereHas('genres', function ($query) use ($genreId) {
+                $query->where('genres.id',$genreId);
             });
         }
         $books = $query
