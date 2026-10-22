@@ -9,9 +9,9 @@
 
 ## 使用技術
 
-- PHP 8.x
+- PHP 8.5.9
 - Laravel 10
-- MySQL 8.4
+- MySQL 8.4.11
 - Docker
 - Laravel Sail
 - Laravel Sanctum
@@ -63,9 +63,9 @@ Authorization: Bearer {token}
 
 ### 認証API
 
-| Method | URL | 認証 |
-|---|---|---|
-| POST | /api/v1/auth/login | 不要 |
+| Method | URL                | 認証 |
+| ------ | ------------------ | ---- |
+| POST   | /api/v1/auth/login | 不要 |
 
 ### 書籍API
 
