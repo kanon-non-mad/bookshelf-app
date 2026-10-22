@@ -420,4 +420,44 @@ class BookApiTest extends TestCase
             'book_id' => $book->id,
         ]);
     }
+
+    public function test_APIで未認証ユーザーは書籍更新できない(): void
+    {
+        $user = User::factory()->create();
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->putJson("/api/v1/books/{$book->id}", [
+            'title' => '更新後タイトル',
+        ]);
+
+        $response->assertStatus(401);
+
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+            'title' => $book->title,
+        ]);
+    }
+
+    public function test_APIで未認証ユーザーは書籍削除できない(): void
+    {
+        $user = User::factory()->create();
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->deleteJson("/api/v1/books/{$book->id}", [
+            'title' => '削除タイトル',
+        ]);
+
+        $response->assertStatus(401);
+
+        $this->assertDatabaseHas('books', [
+            'id' => $book->id,
+            'title' => $book->title,
+        ]);
+    }
 }
