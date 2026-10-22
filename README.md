@@ -21,7 +21,7 @@
 ### リポジトリを取得
 
 ```bash
-git clone リポジトリURL
+git clone https://github.com/kanon-non-mad/bookshelf-app.git
 cd bookshelf-app
 ```
 
@@ -53,7 +53,19 @@ cd bookshelf-app
 
 ### 認証
 
-書き込み系APIでは Laravel Sanctum を使用した Bearer Token認証を行います。
+書き込み系APIでは Laravel Sanctum を使用した Bearer Token認証を採用しています。
+
+ログインAPIで取得したtokenを使用します。
+
+リクエストヘッダー:
+
+Authorization: Bearer {token}
+
+### 認証API
+
+| Method | URL | 認証 |
+|---|---|---|
+| POST | /api/v1/auth/login | 不要 |
 
 ### 書籍API
 
