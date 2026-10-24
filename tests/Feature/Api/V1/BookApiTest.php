@@ -460,4 +460,113 @@ class BookApiTest extends TestCase
             'title' => $book->title,
         ]);
     }
+
+    public function test_APIで書籍一覧を古い順に取得できる(): void
+    {
+        $newBook = Book::factory()->create(['created_at' => now()->subDays(0)]);
+
+        $minBook = Book::factory()->create([
+            'created_at' => now()->subDays(1),
+        ]);
+
+        $oldBook = Book::factory()->create([
+            'created_at' => now()->subDays(2)
+        ]);
+
+        $response = $this->getJson('/api/v1/books?sort=oldest');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath('data.0.id',$oldBook->id);
+        $response->assertJsonPath('data.1.id',$minBook->id);
+        $response->assertJsonPath('data.2.id',$newBook->id);
+    }
+
+    public function test_APIで書籍一覧を新しい順に取得できる(): void
+    {
+        $newBook = Book::factory()->create(['created_at' => now()]);
+
+        $minBook = Book::factory()->create([
+            'created_at' => now()->subDay()
+        ]);
+
+        $oldBook = Book::factory()->create([
+            'created_at' => now()->subDays(2)
+        ]);
+
+        $response = $this->getJson('/api/v1/books?sort=latest');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath('data.0.id',$newBook->id);
+        $response->assertJsonPath('data.1.id',$minBook->id);
+        $response->assertJsonPath('data.2.id',$oldBook->id);
+    }
+
+    public function test_APIで書籍一覧をタイトル順に取得できる(): void
+    {
+        $bookA = Book::factory()->create([
+            'title' => 'Laravel入門',
+        ]);
+
+        $bookB = Book::factory()->create([
+            'title' => 'PHP入門',
+        ]);
+
+        $bookC = Book::factory()->create([
+            'title' => 'Docker入門',
+        ]);
+
+        $response = $this->getJson('/api/v1/books?sort=title');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath('data.0.id',$bookC->id);
+        $response->assertJsonPath('data.1.id',$bookA->id);
+        $response->assertJsonPath('data.2.id',$bookB->id);
+    }
+
+    public function test_APIで書籍一覧を評価順に取得できる(): void
+    {
+        $bookC = Book::factory()->create();
+
+        $bookB = Book::factory()->create();
+
+        Review::factory()->create([
+            'book_id' => $bookB->id,
+            'rating' => 3,
+        ]);
+
+        $bookA = Book::factory()->create();
+
+        Review::factory()->create([
+            'book_id' => $bookA->id,
+            'rating' => 5,
+        ]);
+
+        $response = $this->getJson('/api/v1/books?sort=rating');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath('data.0.id',$bookA->id);
+        $response->assertJsonPath('data.1.id',$bookB->id);
+        $response->assertJsonPath('data.2.id',$bookC->id);
+    }
+
+    public function test_APIでレビューがない書籍は評価順で最後になる(): void
+    {
+        $noReviewBook = Book::factory()->create();
+
+        $reviewBook = Book::factory()->create();
+
+        Review::factory()->create([
+            'book_id' => $reviewBook->id,
+            'rating' => 5,
+        ]);
+
+        $response = $this->getJson('/api/v1/books?sort=rating');
+
+        $response->assertJsonPath('data.0.id', $reviewBook->id);
+        $response->assertJsonPath('data.1.id', $noReviewBook->id);
+    }
 }

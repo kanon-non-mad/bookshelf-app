@@ -34,6 +34,27 @@ class BookController extends Controller
                 $query->where('genres.id',$genreId);
             });
         }
+        
+        $sort = $request->query('sort','latest');
+
+        if ($sort === 'oldest') {
+            $query->orderBy('created_at', 'asc');
+        }
+
+        if ($sort === 'latest') {
+            $query->orderBy('created_at', 'desc');
+        }
+
+        if ($sort === 'title') {
+            $query->orderBy('title','asc');
+        }
+
+        $query->withAvg('reviews','rating');
+        
+        if ($sort === 'rating') {
+            $query->orderByDesc('reviews_avg_rating');
+        }
+
         $books = $query
             ->withCount('reviews')
             ->withAvg('reviews','rating')
