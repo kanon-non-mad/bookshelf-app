@@ -569,4 +569,162 @@ class BookApiTest extends TestCase
         $response->assertJsonPath('data.0.id', $reviewBook->id);
         $response->assertJsonPath('data.1.id', $noReviewBook->id);
     }
+
+    public function test_APIで書籍一覧にレビュー数が返る(): void
+    {
+        $book = Book::factory()->create();
+
+        Review::factory()->count(2)->create([
+            'book_id' => $book->id,
+        ]);
+
+        $response = $this->get('/api/v1/books');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.0.reviews_count',
+            2
+            );
+    }
+
+    public function test_APIで書籍一覧にジャンル情報が返る(): void
+    {
+        $genre = Genre::factory()->create([
+            'name' => 'PHP',
+        ]);
+
+        $book = Book::factory()->create();
+
+        $book->genres()->attach($genre->id);
+
+        $response = $this->get('/api/v1/books');
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.0.genres.0.name','PHP'
+        );
+    }
+
+    public function test_APIで書籍詳細に説明が返る(): void
+    {
+        $book = Book::factory()->create([
+            'description' => 'Laravelの入門書です。',
+        ]);
+
+        $response = $this->get("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.description',
+            'Laravelの入門書です。',
+        );
+    }
+
+    public function test_APIで書籍詳細にレビューが返る(): void
+    {
+        $book = Book::factory()->create();
+
+        Review::factory()->create([
+            'book_id' => $book->id,
+            'content' => '面白かった',
+        ]);
+
+        $response = $this->get("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.reviews.0.content',
+            '面白かった'
+        );
+    }
+
+    public function test_APIで書籍詳細にジャンルが返る(): void
+    {
+        $genre = Genre::factory()->create([
+            'name' => 'PHP',
+        ]);
+        $book = Book::factory()->create();
+
+        $book->genres()->attach($genre->id);
+
+        $response = $this->get("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.genres.0.name',
+            'PHP'
+        );
+    }
+
+    public function test_APIで書籍詳細にレビュー投降者情報が返る(): void
+    {
+        $user = User::factory()->create([
+            'name' => '山田太郎',
+        ]);
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+        Review::factory()->create([
+            'book_id' => $book->id,
+            'user_id' => $user->id,
+            'content' => '面白かった',
+        ]);
+
+        $response = $this->get("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.reviews.0.user.name',
+            '山田太郎'
+        );
+    }
+
+    public function test_APIで書籍詳細にレビュー評価が返る(): void
+    {
+        $book = Book::factory()->create();
+
+        Review::factory()->create([
+            'book_id' => $book->id,
+            'rating' => 5,
+        ]);
+
+        $response = $this->getJson("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonPath(
+            'data.reviews.0.rating',
+            5
+        );
+    }
+
+    public function test_APIで書籍詳細にレビュー投稿日時が返る(): void
+    {
+        $book = Book::factory()->create();
+
+        Review::factory()->create([
+            'book_id' => $book->id,
+        ]);
+
+        $response = $this->getJson("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure([
+            'data' => [
+                'reviews' => [
+                    [
+                        'created_at',
+                    ]
+                ]
+            ]
+        ]);
+    }
 }

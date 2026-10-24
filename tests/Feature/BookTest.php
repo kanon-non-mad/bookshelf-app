@@ -8,6 +8,7 @@ use Tests\TestCase;
 use App\Models\Book;
 use App\Models\User;
 use App\Models\Genre;
+use App\Models\Review;
 
 class BookTest extends TestCase
 {
@@ -252,5 +253,150 @@ class BookTest extends TestCase
         $response = $this->delete("/books/{$book->id}");
 
         $response->assertStatus(403);
+    }
+
+    public function test_書籍一覧でキーワード検索できる(): void
+    {
+        Book::factory()->create([
+            'title' => 'Laravel入門',
+            'author' => '田中太郎',
+        ]);
+
+        Book::factory()->create([
+            'title' => 'PHP入門',
+            'author' => '山田花子',
+        ]);
+
+        $response = $this->get('/books?keyword=Laravel');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('Laravel入門');
+        $response->assertDontSee('PHP入門');
+    }
+
+    public function test_ジャンルIDを指定したら、そのジャンルを持つ本だけ返る(): void
+    {
+        $genreA = Genre::create([
+            'name' => '技術書',
+        ]);
+
+        $genreB = Genre::create([
+            'name' => '歴史',
+        ]);
+
+        $bookA = Book::factory()->create([
+            'title' => 'Laravel入門',
+        ]);
+
+        $bookB = Book::factory()->create([
+            'title' =>  'ITの歴史',
+        ]);
+
+        $bookA->genres()->attach($genreA->id);
+
+        $bookB->genres()->attach($genreB->id);
+
+        $response = $this->get("/books?genre={$genreA->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertSee($bookA->title);
+        $response->assertDontSee($bookB->title);
+    }
+
+    public function test_書籍一覧を古い順に取得できる(): void
+    {
+        $newBook = Book::factory()->create([
+            'title' => '新しい本',
+            'created_at' => now(),
+        ]);
+
+        $oldBook = Book::factory()->create([
+            'title' => '古い本',
+            'created_at' => now()->subDays(2),
+        ]);
+
+        $response = $this->get('/books?sort=oldest');
+
+        $response->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            '古い本',
+            '新しい本',
+        ]);
+    }
+
+    public function test_書籍一覧をタイトル順に取得できる(): void
+    {
+        $bookA = Book::factory()->create([
+            'title' => 'Laravel入門',
+        ]);
+
+        $bookB = Book::factory()->create([
+            'title' => 'PHP入門',
+        ]);
+
+        $bookC = Book::factory()->create([
+            'title' => 'Docker入門',
+        ]);
+
+        $response = $this->get('/books?sort=title');
+
+        $response->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            $bookC->title,
+            $bookA->title,
+            $bookB->title,
+        ]);
+    }
+
+    public function test_書籍一覧を評価順に取得できる(): void
+    {
+        $bookC = Book::factory()->create([
+            'title' => 'レビューなし',
+        ]);
+
+        $bookB = Book::factory()->create([
+            'title' => '評価3',
+        ]);
+
+        Review::factory()->create([
+            'book_id' => $bookB->id,
+            'rating' => 3,
+        ]);
+
+        $bookA = Book::factory()->create([
+            'title' => '評価5',
+        ]);
+
+        Review::factory()->create([
+            'book_id' => $bookA->id,
+            'rating' => 5,
+        ]);
+
+        $response = $this->get('/books?sort=rating');
+
+        $response->assertStatus(200);
+
+        $response->assertSeeInOrder([
+            $bookA->title,
+            $bookB->title,
+            $bookC->title,
+            ]);
+    }
+
+    public function test_ページネーションリンクを押した時、検索条件を維持する(): void {
+        Book::factory()->count(11)->create([
+            'title' => 'Laravel入門',
+        ]);
+
+        $response = $this->get('/books?keyword=Laravel&sort=title');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('keyword=Laravel');
+        $response->assertSee('sort=title');
     }
 }
