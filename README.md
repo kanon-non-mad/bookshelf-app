@@ -1,4 +1,4 @@
-# Bookshelf App
+# Bookshelf 書籍レビューアプリ
 
 ## 概要
 
@@ -16,6 +16,28 @@
 - Laravel Sail
 - Laravel Sanctum
 
+## ER図
+
+```mermaid
+erDiagram
+
+    users ||--o{ books : creates
+    users ||--o{ reviews : posts
+    users ||--o{ favorites : creates
+    users ||--o{ likes : creates
+    users ||--o{ reading_plans : creates
+
+    books ||--o{ reviews : has
+    books ||--o{ favorites : receives
+    books ||--o{ reading_plans : included
+
+    books ||--o{ book_genre : belongs
+    genres ||--o{ book_genre : has
+
+    reviews ||--o{ likes : receives
+
+```
+
 ## 環境構築
 
 ### リポジトリを取得
@@ -28,8 +50,12 @@ cd bookshelf-app
 ## 起動方法
 
 ```bash
+composer install
+cp .env.example .env
 ./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
+./vendor/bin/sail artisan storage:link
 ```
 
 ## テスト
@@ -63,19 +89,19 @@ Authorization: Bearer {token}
 
 ### 認証API
 
-| Method | URL                | 認証 |
+| Method | URL                | 認証 | 概要 |
 | ------ | ------------------ | ---- |
-| POST   | /api/v1/auth/login | 不要 |
+| POST   | /api/v1/auth/login | 不要 | ログインしてBearer Token取得 |
 
 ### 書籍API
 
-| Method | URL                | 認証 |
-| ------ | ------------------ | ---- |
-| GET    | /api/v1/books      | 不要 |
-| GET    | /api/v1/books/{id} | 不要 |
-| POST   | /api/v1/books      | 必要 |
-| PUT    | /api/v1/books/{id} | 必要 |
-| DELETE | /api/v1/books/{id} | 必要 |
+| Method | URL                | 認証 | 概要 |
+| ------ | ------------------ | ---- | ---- |
+| GET    | /api/v1/books      | 不要 | 書籍一覧取得 |
+| GET    | /api/v1/books/{id} | 不要 | 書籍詳細取得 |
+| POST   | /api/v1/books      | 必要 | 書籍登録 |
+| PATCH  | /api/v1/books/{id} | 必要 | 書籍更新 |
+| DELETE | /api/v1/books/{id} | 必要 | 書籍削除 |
 
 ### クエリパラメータ
 
@@ -86,4 +112,10 @@ Authorization: Bearer {token}
 
 ## テスト結果
 
-60 tests passed (134 assertions)
+```bash
+./vendor/bin/sail artisan test
+84 passed (194 assertions)
+```
+## 作成者
+
+kanon-non-mad
