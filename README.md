@@ -112,10 +112,16 @@ Authorization: Bearer {token}
 
 ## テスト結果
 
+全テスト成功済み
+
 ```bash
 ./vendor/bin/sail artisan test
 84 passed (194 assertions)
 ```
+## 開発環境URL
+
+http://localhost
+
 ## 作成者
 
 kanon-non-mad
