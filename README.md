@@ -90,7 +90,7 @@ Authorization: Bearer {token}
 ### 認証API
 
 | Method | URL                | 認証 | 概要 |
-| ------ | ------------------ | ---- |
+| ------ | ------------------ | ---- | ---- |
 | POST   | /api/v1/auth/login | 不要 | ログインしてBearer Token取得 |
 
 ### 書籍API
