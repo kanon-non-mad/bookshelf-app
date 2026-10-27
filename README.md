@@ -103,7 +103,7 @@ Authorization: Bearer {token}
 | PATCH  | /api/v1/books/{id} | 必要 | 書籍更新 |
 | DELETE | /api/v1/books/{id} | 必要 | 書籍削除 |
 
-### クエリパラメータ
+### APIクエリパラメータ
 
 | Parameter | 説明               |
 | --------- | ------------------ |
