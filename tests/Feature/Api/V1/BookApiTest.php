@@ -80,6 +80,36 @@ class BookApiTest extends TestCase
         ]);
     }
 
+    public function test_APIでBearerトークン認証して書籍登録できる(): void {
+        $user = User::factory()->create();
+
+        $genre = Genre::factory()->create();
+
+        $loginResponse = $this->postJson('/api/v1/auth/login',[
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $loginResponse->assertStatus(200);
+
+        $token = $loginResponse->json('token');
+
+        $data = [
+            'isbn' => '1234567890123',
+            'title' => 'APIテスト本',
+            'author' => 'API著者',
+            'published_at' => '2026-01-01',
+            'description' => 'API用',
+            'genres' => [$genre->id],
+        ];
+
+        $response = $this->withHeader(
+            'Authorization', 'Bearer '.$token)
+            ->postJson('/api/v1/books', $data);
+
+        $response->assertStatus(201);
+    }
+
     public function test_APIでログインユーザーが書籍更新できる(): void {
         $user = User::factory()->create();
 
@@ -113,6 +143,48 @@ class BookApiTest extends TestCase
         ]);
     }
 
+    public function test_APIでBearerトークン認証して書籍更新できる(): void {
+        $user = User::factory()->create();
+
+        $loginResponse = $this->postJson('/api/v1/auth/login',[
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $loginResponse->assertStatus(200);
+
+        $token = $loginResponse->json('token');
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $genre = Genre::create([
+            'name' => '技術書',
+        ]);
+
+        $data = [
+            'isbn' => '1234567890123',
+            'title' => 'APIテスト本',
+            'author' => 'API著者',
+            'published_at' => '2026-01-01',
+            'description' => 'API用',
+            'genres' => [$genre->id],
+        ];
+
+        $response = $this->withHeader(
+            'Authorization', 'Bearer '.$token)
+            ->patchJson("/api/v1/books/{$book->id}", $data);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('books',[
+            'title' => 'APIテスト本',
+            'isbn' => '1234567890123',
+            'id' => $book->id,
+        ]);
+    }
+
     public function test_APIでログインユーザーが書籍削除できる(): void {
         $user = User::factory()->create();
 
@@ -123,6 +195,33 @@ class BookApiTest extends TestCase
         Sanctum::actingAs($user);
 
         $response = $this->deleteJson("/api/v1/books/{$book->id}");
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseMissing('books',[
+            'id' => $book->id,
+        ]);
+    }
+
+    public function test_APIでBearerトークン認証して書籍削除できる(): void {
+        $user = User::factory()->create();
+
+        $loginResponse = $this->postJson('/api/v1/auth/login',[
+            'email' => $user->email,
+            'password' => 'password',
+        ]);
+
+        $loginResponse->assertStatus(200);
+
+        $token = $loginResponse->json('token');
+
+        $book = Book::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->withHeader(
+            'Authorization', 'Bearer '.$token)
+            ->deleteJson("/api/v1/books/{$book->id}");
 
         $response->assertStatus(200);
 
