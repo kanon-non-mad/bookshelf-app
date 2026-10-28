@@ -89,19 +89,19 @@ Authorization: Bearer {token}
 
 ### 認証API
 
-| Method | URL                | 認証 | 概要 |
-| ------ | ------------------ | ---- | ---- |
+| Method | URL                | 認証 | 概要                         |
+| ------ | ------------------ | ---- | ---------------------------- |
 | POST   | /api/v1/auth/login | 不要 | ログインしてBearer Token取得 |
 
 ### 書籍API
 
-| Method | URL                | 認証 | 概要 |
-| ------ | ------------------ | ---- | ---- |
+| Method | URL                | 認証 | 概要         |
+| ------ | ------------------ | ---- | ------------ |
 | GET    | /api/v1/books      | 不要 | 書籍一覧取得 |
 | GET    | /api/v1/books/{id} | 不要 | 書籍詳細取得 |
-| POST   | /api/v1/books      | 必要 | 書籍登録 |
-| PATCH  | /api/v1/books/{id} | 必要 | 書籍更新 |
-| DELETE | /api/v1/books/{id} | 必要 | 書籍削除 |
+| POST   | /api/v1/books      | 必要 | 書籍登録     |
+| PATCH  | /api/v1/books/{id} | 必要 | 書籍更新     |
+| DELETE | /api/v1/books/{id} | 必要 | 書籍削除     |
 
 ### APIクエリパラメータ
 
@@ -118,6 +118,7 @@ Authorization: Bearer {token}
 ./vendor/bin/sail artisan test
 84 passed (194 assertions)
 ```
+
 ## 開発環境URL
 
 http://localhost
