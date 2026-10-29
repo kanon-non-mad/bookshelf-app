@@ -16,7 +16,7 @@ class BookTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_書籍一覧表示(): void
+    public function test_書籍一覧を表示する(): void
     {
         $book = Book::factory()->create();
 
@@ -27,7 +27,7 @@ class BookTest extends TestCase
         $response->assertSee($book->title);
     }
 
-    public function test_書籍詳細表示(): void
+    public function test_書籍詳細を表示する(): void
     {
         $book = Book::factory()->create();
 
@@ -41,7 +41,7 @@ class BookTest extends TestCase
 
         $response->assertSee($book->author);
 
-        $response->assertSee($book->published_at);
+        $response->assertSee($book->published_at->format('Y-m-d'));
     }
 
     public function test_未ログインでは書籍登録画面に入れない(): void
@@ -53,7 +53,7 @@ class BookTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_書籍登録画面表示(): void
+    public function test_書籍登録画面を表示する(): void
     {
         $user = User::factory()->create();
 
@@ -66,7 +66,7 @@ class BookTest extends TestCase
         $response->assertSee('書籍の登録');
     }
 
-    public function test_書籍登録成功(): void
+    public function test_書籍登録が成功する(): void
     {
         $user = User::factory()->create();
 

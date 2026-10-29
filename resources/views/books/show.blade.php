@@ -16,8 +16,8 @@
                 <div class="p-6 text-gray-900">
                     <div class="flex flex-col md:flex-row gap-6">
                         <div class="md:w-1/3">
-                            @if($book->book_image)
-                                <img src="{{ $book->book_image }}" alt="{{ $book->title }}" class="w-full rounded shadow">
+                            @if($book->image_url)
+                                <img src="{{ $book->image_url }}" alt="{{ $book->title }}" class="w-full rounded shadow">
                             @else
                                 <div class="w-full h-64 bg-gray-200 flex items-center justify-center rounded">
                                     <span class="text-gray-500">画像なし</span>
@@ -50,17 +50,17 @@
                                         </form>
                                     @endif
                                 @else
-                                    {{--<a href="{{ route('login') }}" class="text-gray-400 hover:text-red-500" title="お気に入りに追加するにはログインしてください">
+                                    <a href="{{ route('login') }}" class="text-gray-400 hover:text-red-500" title="お気に入りに追加するにはログインしてください">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                         </svg>
-                                    </a>--}}
+                                    </a>
                                 @endauth
                             </div>
 
                             <p class="text-gray-600 mb-2"><strong>著者:</strong> {{ $book->author }}</p>
-                            <p class="text-gray-600 mb-2"><strong>ISBN:</strong> {{ $book->isbn }}</p>
-                            <p class="text-gray-600 mb-2"><strong>出版日:</strong> {{ $book->published_at }}</p>
+                            <p class="text-gray-600 mb-2"><strong>ISBN:</strong> {{ $book->isbn ?? '未登録' }}</p>
+                            <p class="text-gray-600 mb-2"><strong>出版日:</strong> {{ $book->published_at?->format('Y-m-d') ?? '未登録' }}</p>
                             <div class="mb-4">
                                 <strong>ジャンル:</strong>
                                 @foreach($book->genres as $genre)
@@ -118,11 +118,11 @@
                                         @enderror
                                     </div>
                                     <div class="mb-4">
-                                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">コメント</label>
-                                        <textarea name="content" id="content" rows="3"
+                                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">コメント</label>
+                                        <textarea name="comment" id="comment" rows="3"
                                             class="border-gray-300 rounded-md shadow-sm w-full"
-                                            placeholder="この書籍の感想を書いてください">{{ old('content') }}</textarea>
-                                        @error('content')
+                                            placeholder="この書籍の感想を書いてください">{{ old('comment') }}</textarea>
+                                        @error('comment')
                                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -135,7 +135,7 @@
                             </div>
                         @else
                             <p class="mb-6 text-gray-600">
-                                レビューを投稿するには{{--<a href="{{ route('login') }}" class="text-blue-600 hover:underline">ログイン</a>--}}してください。
+                                レビューを投稿するには<a href="{{ route('login') }}" class="text-blue-600 hover:underline">ログイン</a>してください。
                             </p>
                         @endauth
 
@@ -148,22 +148,21 @@
                                             <div>
                                                 <span class="font-semibold">{{ $review->user->name }}</span>
                                                 <span class="text-yellow-500 ml-2">
-                                                    {{ str_repeat('★', (int) $review->rating) }}{{ str_repeat('☆', 5 - (int) $review->rating) }}
+                                                    {{ str_repeat('★', $review->rating) }}{{ str_repeat('☆', 5 - $review->rating) }}
                                                 </span>
                                             </div>
                                             <span class="text-sm text-gray-500">{{ $review->created_at->format('Y/m/d') }}</span>
                                         </div>
-                                        @if($review->content)
-                                            <p class="text-gray-700">{{ $review->content }}</p>
+                                        @if($review->comment)
+                                            <p class="text-gray-700">{{ $review->comment }}</p>
                                         @endif
 
                                         <div class="mt-3 flex items-center justify-between">
                                             <!-- いいねボタン -->
                                             @auth
                                                 @if(Auth::user()->likedReviews->contains($review->id))
-                                                    <form action="{{ route('likes.destroy', $review) }}" method="POST" class="inline" novalidate>
+                                                    <form action="{{ route('likes.store', $review) }}" method="POST" class="inline" novalidate>
                                                         @csrf
-                                                        @method('DELETE')
                                                         <button type="submit" class="text-blue-500 hover:text-blue-700 text-sm flex items-center">
                                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
@@ -183,12 +182,12 @@
                                                     </form>
                                                 @endif
                                             @else
-                                                {{--<a href="{{ route('login') }}" class="text-gray-500 hover:text-blue-500 text-sm flex items-center">
+                                                <a href="{{ route('login') }}" class="text-gray-500 hover:text-blue-500 text-sm flex items-center">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 20 20">
                                                         <path stroke-linecap="round" stroke-linejoin="round" d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"/>
                                                     </svg>
                                                     いいね ({{ $review->likedByUsers->count() }})
-                                                </a>--}}
+                                                </a>
                                             @endauth
 
                                             <!-- 編集・削除ボタン -->

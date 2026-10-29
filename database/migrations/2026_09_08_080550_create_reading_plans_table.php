@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('book_id')->constrained();
+            $table->date('target_date');
             $table->string('status')->default('未着手');
+            $table->unique(['user_id','book_id']);
             $table->timestamps();
         });
     }

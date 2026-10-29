@@ -6,7 +6,9 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\GenreController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\LikeController;
-
+use App\Http\Controllers\ReadingPlanController;
+use App\Http\Controllers\RankingController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,8 +50,23 @@ Route::middleware('auth')->group(function () {
 
 //LikeController
     Route::post('reviews/{review}/likes',[LikeController::class,'toggle'])
-    ->name('likes.store');
+        ->name('likes.store');
+
+//ReadingPlanController
+    Route::resource('reading-plans',ReadingPlanController::class)
+        ->except(['show']);
+    Route::post('reading-plans/{reading_plan}/complete', [ReadingPlanController::class, 'complete'])
+    ->name('reading-plans.complete');
+
+//RankingController
+    Route::get('/ranking', [RankingController::class, 'index'])
+        ->name('ranking.index');
+
+//ReportController
+    Route::get('/reports', [ReportController::class, 'index'])
+        ->name('reports.index');
 });
+
 
 Route::resource('books', BookController::class)
     ->only(['index','show']);
