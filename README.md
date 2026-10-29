@@ -72,6 +72,11 @@ cp .env.example .env
 - お気に入り登録
 - いいね機能
 - ジャンル管理
+- 読書計画管理
+    - 読書予定の登録
+    - 読書予定日の編集
+    - 読書完了状態への変更
+    - 読書計画の削除
 
 ## API仕様
 
@@ -116,7 +121,7 @@ Authorization: Bearer {token}
 
 ```bash
 ./vendor/bin/sail artisan test
-84 passed (194 assertions)
+95 passed (218 assertions)
 ```
 
 ## 開発環境URL
