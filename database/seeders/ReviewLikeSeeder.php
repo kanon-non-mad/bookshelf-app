@@ -41,7 +41,7 @@ class ReviewLikeSeeder extends Seeder
             $user = User::where('email', $data['email'])
             ->first();
 
-            $user->reviewLikes()->syncWithoutDetaching($data['review_ids']);
+            $user->likedReviews()->syncWithoutDetaching($data['review_ids']);
         }
     }
 }

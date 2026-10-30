@@ -21,9 +21,9 @@
                     <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.index')">
                         {{ __('書籍一覧') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('ranking.index')" :active="request()->routeIs('ranking.index')">
+                    {{--<x-nav-link :href="route('ranking.index')" :active="request()->routeIs('ranking.index')">
                         {{ __('ランキング') }}
-                    </x-nav-link>
+                    </x-nav-link>--}}
                     <x-nav-link :href="route('books.create')" :active="request()->routeIs('books.create')">
                         {{ __('書籍登録') }}
                     </x-nav-link>
@@ -33,9 +33,9 @@
                     <x-nav-link :href="route('genres.index')" :active="request()->routeIs('genres.*')">
                         {{ __('ジャンル管理') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
+                    {{--$_COOKIE<x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
                         {{ __('マイレポート') }}
-                    </x-nav-link>
+                    </x-nav-link>--}}
                     <x-nav-link :href="route('reading-plans.index')" :active="request()->routeIs('reading-plans.*')">
                         {{ __('読書計画') }}
                     </x-nav-link>

@@ -31,7 +31,7 @@ class ReadingPlanController extends Controller
      */
     public function create()
     {
-        $books = auth()->user()->books;
+        $books = Book::orderBy('title')->get();
 
         return view('reading-plans.create',compact('books'));
     }
