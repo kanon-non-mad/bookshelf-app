@@ -121,7 +121,7 @@ Authorization: Bearer {token}
 
 ```bash
 ./vendor/bin/sail artisan test
-95 passed (218 assertions)
+96 passed (220 assertions)
 ```
 
 ## 開発環境URL

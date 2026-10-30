@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReadingPlanRequest;
+use App\Http\Requests\UpdateReadingPlanRequest;
 use Illuminate\Http\Request;
 use App\Models\ReadingPlan;
 use App\Models\Book;
@@ -67,7 +68,7 @@ class ReadingPlanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ReadingPlan $readingPlan)
+    public function update(UpdateReadingPlanRequest $request, ReadingPlan $readingPlan)
     {
         $this->authorize('update', $readingPlan);
 

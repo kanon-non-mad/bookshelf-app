@@ -220,4 +220,23 @@ class ReadingPlanTest extends TestCase
             'target_date',
         ]);
     }
+
+    public function test_読書計画更新時にtarget_dateが未入力だと更新できない(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $readingPlan = ReadingPlan::factory()->create([
+            'user_id' => $user->id,
+        ]);
+
+        $response = $this->put(route('reading-plans.update', $readingPlan),[
+            'target_date' => '',
+        ]);
+
+        $response->assertSessionHasErrors([
+            'target_date',
+        ]);
+    }
 }
