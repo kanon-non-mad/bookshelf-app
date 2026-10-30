@@ -26,4 +26,14 @@ class StoreReadingPlanRequest extends FormRequest
             'target_date' => ['required', 'date'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'book_id.required' => '書籍を選択してください。',
+            'book_id.exists' => '指定された書籍が存在しません。',
+            'target_date.required' => '読書予定日を入力してください。',
+            'target_date.date' => '読書予定日は正しい日付で入力してください。',
+        ];
+    }
 }

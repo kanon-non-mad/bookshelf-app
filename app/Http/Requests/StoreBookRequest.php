@@ -50,12 +50,15 @@ class StoreBookRequest extends FormRequest
     {
         return [
             'title.required' => 'タイトルは必須です。',
+            'title.string' => 'タイトルは文字列で入力してください。',
             'author.required' => '著者名は必須です。',
+            'author.string' => '著者名は文字列で入力してください。',
             'isbn.required' => 'ISBNは必須です。',
             'isbn.digits' => 'ISBNは13桁で入力してください。',
             'isbn.unique' => 'このISBNは既に登録されています。',
             'published_at.required' => '出版日は必須です。',
             'published_at.date' => '正しい日付を入力してください。',
+            'description.string' => '説明は文字列で入力してください。',
             'genres.required' => 'ジャンルを選択してください。',
             'genres.min' => 'ジャンルは1つ以上選択してください。',
             'genres.*.exists' => '存在しないジャンルが指定されています。',

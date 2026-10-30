@@ -26,4 +26,14 @@ class StoreReviewRequest extends FormRequest
             'rating' => ['required','between:1,5','numeric'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'content.string' => 'レビュー内容は文字列で入力してください。',
+            'rating.required' => '評価を入力してください。',
+            'rating.between' => '評価は1から5の範囲で入力してください。',
+            'rating.numeric' => '評価は数値で入力してください。',
+        ];
+    }
 }

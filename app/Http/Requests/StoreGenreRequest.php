@@ -29,4 +29,13 @@ class StoreGenreRequest extends FormRequest
             ],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'ジャンル名を入力してください。',
+            'name.string' => 'ジャンル名は文字列で入力してください。',
+            'name.unique' => 'このジャンル名はすでに登録されています。',
+        ];
+    }
 }
