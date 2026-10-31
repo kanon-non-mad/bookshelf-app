@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('book_id')->constrained();
             $table->text('content')->nullable();
-            $table->decimal('rating',2,1);
+            $table->decimal('rating', 2, 1);
             $table->timestamps();
         });
     }

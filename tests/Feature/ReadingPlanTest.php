@@ -2,17 +2,17 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
+use App\Enums\ReadingPlanStatus;
 use App\Models\Book;
 use App\Models\ReadingPlan;
-use App\Enums\ReadingPlanStatus;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ReadingPlanTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -52,14 +52,14 @@ class ReadingPlanTest extends TestCase
 
         $targetDate = '2027-01-01';
 
-        $response = $this->post('/reading-plans',[
+        $response = $this->post('/reading-plans', [
             'book_id' => $book->id,
             'target_date' => $targetDate,
         ]);
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('reading_plans',[
+        $this->assertDatabaseHas('reading_plans', [
             'user_id' => $user->id,
             'book_id' => $book->id,
             'target_date' => $targetDate,
@@ -115,13 +115,13 @@ class ReadingPlanTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->put(route('reading-plans.update', $readingPlan),[
+        $response = $this->put(route('reading-plans.update', $readingPlan), [
             'target_date' => $targetDate,
         ]);
 
         $response->assertRedirect('/reading-plans');
 
-        $this->assertDatabaseHas('reading_plans',[
+        $this->assertDatabaseHas('reading_plans', [
             'user_id' => $user->id,
             'target_date' => $targetDate,
         ]);
@@ -141,7 +141,7 @@ class ReadingPlanTest extends TestCase
 
         $response->assertRedirect('/reading-plans');
 
-        $this->assertDatabaseMissing('reading_plans',[
+        $this->assertDatabaseMissing('reading_plans', [
             'id' => $readingPlan->id,
         ]);
     }
@@ -160,13 +160,13 @@ class ReadingPlanTest extends TestCase
             'user_id' => $owner->id,
         ]);
 
-        $response = $this->put(route('reading-plans.update', $readingPlan),[
+        $response = $this->put(route('reading-plans.update', $readingPlan), [
             'target_date' => $targetDate,
         ]);
 
         $response->assertStatus(403);
 
-        $this->assertDatabaseHas('reading_plans',[
+        $this->assertDatabaseHas('reading_plans', [
             'user_id' => $owner->id,
             'target_date' => $targetDate,
         ]);
@@ -231,7 +231,7 @@ class ReadingPlanTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $response = $this->put(route('reading-plans.update', $readingPlan),[
+        $response = $this->put(route('reading-plans.update', $readingPlan), [
             'target_date' => '',
         ]);
 

@@ -2,13 +2,10 @@
 
 namespace Tests\Feature\Api\V1;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use Laravel\Sanctum\Sanctum;
-use App\Models\User;
-use App\Models\Book;
 use App\Models\Genre;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AuthApiTest extends TestCase
 {
@@ -17,7 +14,7 @@ class AuthApiTest extends TestCase
     /**
      * A basic feature test example.
      */
-    public function test_APIでログインに成功できる(): void
+    public function test_ap_iでログインに成功できる(): void
     {
         $user = User::factory()->create();
 
@@ -45,11 +42,12 @@ class AuthApiTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonStructure([
-            'token'
+            'token',
         ]);
     }
 
-    public function test_間違ったパスワードではログインできない(): void {
+    public function test_間違ったパスワードではログインできない(): void
+    {
         $user = User::factory()->create();
 
         $data = [
@@ -66,7 +64,8 @@ class AuthApiTest extends TestCase
         ]);
     }
 
-    public function test_取得したtokenで認証が必要なAPIにアクセスできる(): void {
+    public function test_取得したtokenで認証が必要な_ap_iにアクセスできる(): void
+    {
         $user = User::factory()->create();
 
         $data = [
@@ -79,7 +78,7 @@ class AuthApiTest extends TestCase
         $token = $loginResponse->json('token');
 
         $genre = Genre::create([
-        'name' => '技術書',
+            'name' => '技術書',
         ]);
 
         $bookData = [
@@ -101,35 +100,36 @@ class AuthApiTest extends TestCase
     public function test_tokenなしでは書籍登録できない(): void
     {
         $genre = Genre::create([
-        'name' => '技術書',
+            'name' => '技術書',
         ]);
 
         $data = [
-        'isbn' => '1234567890123',
-        'title' => 'APIテスト本',
-        'author' => 'API著者',
-        'published_at' => '2026-01-01',
-        'description' => 'API用',
-        'genres' => [$genre->id],
+            'isbn' => '1234567890123',
+            'title' => 'APIテスト本',
+            'author' => 'API著者',
+            'published_at' => '2026-01-01',
+            'description' => 'API用',
+            'genres' => [$genre->id],
         ];
 
-        $response = $this->postJson('/api/v1/books',$data);
+        $response = $this->postJson('/api/v1/books', $data);
 
         $response->assertStatus(401);
     }
 
-    public function test_不正なtokenでは書籍登録できない():void {
+    public function test_不正なtokenでは書籍登録できない(): void
+    {
         $genre = Genre::create([
-        'name' => '技術書',
+            'name' => '技術書',
         ]);
 
         $data = [
-        'isbn' => '1234567890123',
-        'title' => 'APIテスト本',
-        'author' => 'API著者',
-        'published_at' => '2026-01-01',
-        'description' => 'API用',
-        'genres' => [$genre->id],
+            'isbn' => '1234567890123',
+            'title' => 'APIテスト本',
+            'author' => 'API著者',
+            'published_at' => '2026-01-01',
+            'description' => 'API用',
+            'genres' => [$genre->id],
         ];
 
         $response = $this

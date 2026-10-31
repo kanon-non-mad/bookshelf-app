@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\ReadingPlanStatus;
 use App\Http\Requests\StoreReadingPlanRequest;
 use App\Http\Requests\UpdateReadingPlanRequest;
-use Illuminate\Http\Request;
-use App\Models\ReadingPlan;
 use App\Models\Book;
-use App\Enums\ReadingPlanStatus;
+use App\Models\ReadingPlan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReadingPlanController extends Controller
@@ -18,13 +18,13 @@ class ReadingPlanController extends Controller
     public function index(Request $request)
     {
         $readingPlans = auth()->user()
-                ->readingPlans()
-                ->with('book')
-                ->get();
+            ->readingPlans()
+            ->with('book')
+            ->get();
 
         $currentStatus = $request->input('status');
 
-        return view('reading-plans.index',compact('readingPlans','currentStatus'));
+        return view('reading-plans.index', compact('readingPlans', 'currentStatus'));
     }
 
     /**
@@ -34,7 +34,7 @@ class ReadingPlanController extends Controller
     {
         $books = Book::orderBy('title')->get();
 
-        return view('reading-plans.create',compact('books'));
+        return view('reading-plans.create', compact('books'));
     }
 
     /**
@@ -59,8 +59,8 @@ class ReadingPlanController extends Controller
     public function edit(ReadingPlan $readingPlan)
     {
         $this->authorize('update', $readingPlan);
-        
-        return view ('reading-plans.edit',[
+
+        return view('reading-plans.edit', [
             'readingPlan' => $readingPlan,
         ]);
     }
@@ -97,7 +97,7 @@ class ReadingPlanController extends Controller
         $this->authorize('delete', $readingPlan);
 
         $readingPlan->delete();
-    
+
         return redirect()->route('reading-plans.index');
     }
 }

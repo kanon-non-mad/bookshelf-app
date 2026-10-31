@@ -2,14 +2,13 @@
 
 namespace Tests\Feature\Api\V1;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\User;
 use App\Models\Book;
 use App\Models\Genre;
 use App\Models\Review;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class BookApiTest extends TestCase
 {
@@ -18,7 +17,7 @@ class BookApiTest extends TestCase
      */
     use RefreshDatabase;
 
-    public function test_APIで書籍一覧を取得できる(): void
+    public function test_ap_iで書籍一覧を取得できる(): void
     {
         Book::factory()->count(3)->create();
 
@@ -29,7 +28,7 @@ class BookApiTest extends TestCase
         $response->assertJsonCount(3);
     }
 
-    public function test_APIで書籍の詳細を取得できる(): void 
+    public function test_ap_iで書籍の詳細を取得できる(): void
     {
         $book = Book::factory()->create();
 
@@ -40,11 +39,12 @@ class BookApiTest extends TestCase
         $response->assertJson([
             'data' => [
                 'title' => $book->title,
-            ]
+            ],
         ]);
     }
 
-    public function test_APIでログインユーザーが書籍登録できる(): void {
+    public function test_ap_iでログインユーザーが書籍登録できる(): void
+    {
         $user = User::factory()->create();
 
         $genre = Genre::create([
@@ -70,22 +70,23 @@ class BookApiTest extends TestCase
             'message' => 'Book created successfully.',
             'data' => [
                 'title' => 'APIテスト本',
-            ]
+            ],
         ]);
 
-        $this->assertDatabaseHas('books',[
+        $this->assertDatabaseHas('books', [
             'title' => 'APIテスト本',
             'isbn' => '1234567890123',
             'user_id' => $user->id,
         ]);
     }
 
-    public function test_APIでBearerトークン認証して書籍登録できる(): void {
+    public function test_ap_iで_bearerトークン認証して書籍登録できる(): void
+    {
         $user = User::factory()->create();
 
         $genre = Genre::factory()->create();
 
-        $loginResponse = $this->postJson('/api/v1/auth/login',[
+        $loginResponse = $this->postJson('/api/v1/auth/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -110,7 +111,8 @@ class BookApiTest extends TestCase
         $response->assertStatus(201);
     }
 
-    public function test_APIでログインユーザーが書籍更新できる(): void {
+    public function test_ap_iでログインユーザーが書籍更新できる(): void
+    {
         $user = User::factory()->create();
 
         $book = Book::factory()->create([
@@ -136,17 +138,18 @@ class BookApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('books',[
+        $this->assertDatabaseHas('books', [
             'title' => 'APIテスト本',
             'isbn' => '1234567890123',
             'id' => $book->id,
         ]);
     }
 
-    public function test_APIでBearerトークン認証して書籍更新できる(): void {
+    public function test_ap_iで_bearerトークン認証して書籍更新できる(): void
+    {
         $user = User::factory()->create();
 
-        $loginResponse = $this->postJson('/api/v1/auth/login',[
+        $loginResponse = $this->postJson('/api/v1/auth/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -178,14 +181,15 @@ class BookApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseHas('books',[
+        $this->assertDatabaseHas('books', [
             'title' => 'APIテスト本',
             'isbn' => '1234567890123',
             'id' => $book->id,
         ]);
     }
 
-    public function test_APIでログインユーザーが書籍削除できる(): void {
+    public function test_ap_iでログインユーザーが書籍削除できる(): void
+    {
         $user = User::factory()->create();
 
         $book = Book::factory()->create([
@@ -198,15 +202,16 @@ class BookApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseMissing('books',[
+        $this->assertDatabaseMissing('books', [
             'id' => $book->id,
         ]);
     }
 
-    public function test_APIでBearerトークン認証して書籍削除できる(): void {
+    public function test_ap_iで_bearerトークン認証して書籍削除できる(): void
+    {
         $user = User::factory()->create();
 
-        $loginResponse = $this->postJson('/api/v1/auth/login',[
+        $loginResponse = $this->postJson('/api/v1/auth/login', [
             'email' => $user->email,
             'password' => 'password',
         ]);
@@ -225,12 +230,12 @@ class BookApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $this->assertDatabaseMissing('books',[
+        $this->assertDatabaseMissing('books', [
             'id' => $book->id,
         ]);
     }
 
-    public function test_APIで他人の書籍を更新できない(): void 
+    public function test_ap_iで他人の書籍を更新できない(): void
     {
         $owner = User::factory()->create();
 
@@ -255,12 +260,12 @@ class BookApiTest extends TestCase
 
         Sanctum::actingAs($otherUser);
 
-        $response = $this->patchJson("/api/v1/books/{$book->id}",$data);
+        $response = $this->patchJson("/api/v1/books/{$book->id}", $data);
 
         $response->assertStatus(403);
     }
 
-    public function test_APIで他人の書籍を削除できない(): void 
+    public function test_ap_iで他人の書籍を削除できない(): void
     {
         $owner = User::factory()->create();
 
@@ -277,7 +282,7 @@ class BookApiTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_APIでタイトル検索ができる(): void 
+    public function test_ap_iでタイトル検索ができる(): void
     {
         $laravelBook = Book::factory()->create([
             'title' => 'Laravel入門',
@@ -290,8 +295,8 @@ class BookApiTest extends TestCase
         $javaBook = Book::factory()->create([
             'title' => 'Java入門',
         ]);
-        
-        $response = $this->getJson("/api/v1/books?keyword=Laravel");
+
+        $response = $this->getJson('/api/v1/books?keyword=Laravel');
 
         $response->assertStatus(200);
 
@@ -308,9 +313,10 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで書籍一覧にジャンル情報が含まれる(): void {
+    public function test_ap_iで書籍一覧にジャンル情報が含まれる(): void
+    {
         $genre = Genre::factory()->create([
-            'name' => 'Laravel'
+            'name' => 'Laravel',
         ]);
 
         $book = Book::factory()->create([
@@ -329,7 +335,7 @@ class BookApiTest extends TestCase
                     'title' => 'Laravel入門',
                     'genres' => [
                         [
-                        'name' => 'Laravel',
+                            'name' => 'Laravel',
                         ],
                     ],
                 ],
@@ -337,7 +343,8 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで書籍一覧にレビュー件数と平均評価が含まれる(): void {
+    public function test_ap_iで書籍一覧にレビュー件数と平均評価が含まれる(): void
+    {
         $user = User::factory()->create();
 
         $book = Book::factory()->create([
@@ -371,14 +378,15 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで書籍一覧がページネーションされる(): void {
+    public function test_ap_iで書籍一覧がページネーションされる(): void
+    {
         Book::factory()->count(11)->create();
 
         $response = $this->getJson('/api/v1/books');
 
         $response->assertStatus(200);
 
-        $response->assertJsonCount(10,'data');
+        $response->assertJsonCount(10, 'data');
 
         $response->assertJson([
             'meta' => [
@@ -387,7 +395,7 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIでジャンル検索ができる(): void 
+    public function test_ap_iでジャンル検索ができる(): void
     {
         $laravelGenre = Genre::factory()->create([
             'name' => 'Laravel',
@@ -403,7 +411,6 @@ class BookApiTest extends TestCase
 
         $laravelBook->genres()->attach($laravelGenre);
 
-
         $phpBook = Book::factory()->create([
             'title' => 'PHP入門',
         ]);
@@ -417,7 +424,7 @@ class BookApiTest extends TestCase
         $response->assertJson([
             'data' => [
                 [
-                'title' => 'Laravel入門',
+                    'title' => 'Laravel入門',
                 ],
             ],
         ]);
@@ -427,13 +434,14 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_存在しないIDが指定されたとき404になるか(): void {
+    public function test_存在しない_i_dが指定されたとき404になるか(): void
+    {
         $response = $this->getJson('/api/v1/books/999999');
 
         $response->assertStatus(404);
     }
 
-    public function test_APIで書籍登録時のバリデーションエラーを返す(): void 
+    public function test_ap_iで書籍登録時のバリデーションエラーを返す(): void
     {
         $user = User::factory()->create();
 
@@ -457,7 +465,7 @@ class BookApiTest extends TestCase
         $response->assertStatus(422);
 
         $response->assertJsonValidationErrors([
-            'isbn'
+            'isbn',
         ]);
 
         $response->assertJsonFragment([
@@ -465,7 +473,7 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで存在しないIDを更新すると404になる(): void
+    public function test_ap_iで存在しない_i_dを更新すると404になる(): void
     {
         $user = User::factory()->create();
 
@@ -476,7 +484,7 @@ class BookApiTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_APIで書籍削除すると関連データも削除される(): void 
+    public function test_ap_iで書籍削除すると関連データも削除される(): void
     {
         $user = User::factory()->create();
 
@@ -520,7 +528,7 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで未認証ユーザーは書籍更新できない(): void
+    public function test_ap_iで未認証ユーザーは書籍更新できない(): void
     {
         $user = User::factory()->create();
 
@@ -540,7 +548,7 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで未認証ユーザーは書籍削除できない(): void
+    public function test_ap_iで未認証ユーザーは書籍削除できない(): void
     {
         $user = User::factory()->create();
 
@@ -560,7 +568,7 @@ class BookApiTest extends TestCase
         ]);
     }
 
-    public function test_APIで書籍一覧を古い順に取得できる(): void
+    public function test_ap_iで書籍一覧を古い順に取得できる(): void
     {
         $newBook = Book::factory()->create(['created_at' => now()->subDays(0)]);
 
@@ -569,40 +577,40 @@ class BookApiTest extends TestCase
         ]);
 
         $oldBook = Book::factory()->create([
-            'created_at' => now()->subDays(2)
+            'created_at' => now()->subDays(2),
         ]);
 
         $response = $this->getJson('/api/v1/books?sort=oldest');
 
         $response->assertStatus(200);
 
-        $response->assertJsonPath('data.0.id',$oldBook->id);
-        $response->assertJsonPath('data.1.id',$minBook->id);
-        $response->assertJsonPath('data.2.id',$newBook->id);
+        $response->assertJsonPath('data.0.id', $oldBook->id);
+        $response->assertJsonPath('data.1.id', $minBook->id);
+        $response->assertJsonPath('data.2.id', $newBook->id);
     }
 
-    public function test_APIで書籍一覧を新しい順に取得できる(): void
+    public function test_ap_iで書籍一覧を新しい順に取得できる(): void
     {
         $newBook = Book::factory()->create(['created_at' => now()]);
 
         $minBook = Book::factory()->create([
-            'created_at' => now()->subDay()
+            'created_at' => now()->subDay(),
         ]);
 
         $oldBook = Book::factory()->create([
-            'created_at' => now()->subDays(2)
+            'created_at' => now()->subDays(2),
         ]);
 
         $response = $this->getJson('/api/v1/books?sort=latest');
 
         $response->assertStatus(200);
 
-        $response->assertJsonPath('data.0.id',$newBook->id);
-        $response->assertJsonPath('data.1.id',$minBook->id);
-        $response->assertJsonPath('data.2.id',$oldBook->id);
+        $response->assertJsonPath('data.0.id', $newBook->id);
+        $response->assertJsonPath('data.1.id', $minBook->id);
+        $response->assertJsonPath('data.2.id', $oldBook->id);
     }
 
-    public function test_APIで書籍一覧をタイトル順に取得できる(): void
+    public function test_ap_iで書籍一覧をタイトル順に取得できる(): void
     {
         $bookA = Book::factory()->create([
             'title' => 'Laravel入門',
@@ -620,12 +628,12 @@ class BookApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJsonPath('data.0.id',$bookC->id);
-        $response->assertJsonPath('data.1.id',$bookA->id);
-        $response->assertJsonPath('data.2.id',$bookB->id);
+        $response->assertJsonPath('data.0.id', $bookC->id);
+        $response->assertJsonPath('data.1.id', $bookA->id);
+        $response->assertJsonPath('data.2.id', $bookB->id);
     }
 
-    public function test_APIで書籍一覧を評価順に取得できる(): void
+    public function test_ap_iで書籍一覧を評価順に取得できる(): void
     {
         $bookC = Book::factory()->create();
 
@@ -647,12 +655,12 @@ class BookApiTest extends TestCase
 
         $response->assertStatus(200);
 
-        $response->assertJsonPath('data.0.id',$bookA->id);
-        $response->assertJsonPath('data.1.id',$bookB->id);
-        $response->assertJsonPath('data.2.id',$bookC->id);
+        $response->assertJsonPath('data.0.id', $bookA->id);
+        $response->assertJsonPath('data.1.id', $bookB->id);
+        $response->assertJsonPath('data.2.id', $bookC->id);
     }
 
-    public function test_APIでレビューがない書籍は評価順で最後になる(): void
+    public function test_ap_iでレビューがない書籍は評価順で最後になる(): void
     {
         $noReviewBook = Book::factory()->create();
 
@@ -669,7 +677,7 @@ class BookApiTest extends TestCase
         $response->assertJsonPath('data.1.id', $noReviewBook->id);
     }
 
-    public function test_APIで書籍一覧にレビュー数が返る(): void
+    public function test_ap_iで書籍一覧にレビュー数が返る(): void
     {
         $book = Book::factory()->create();
 
@@ -684,10 +692,10 @@ class BookApiTest extends TestCase
         $response->assertJsonPath(
             'data.0.reviews_count',
             2
-            );
+        );
     }
 
-    public function test_APIで書籍一覧にジャンル情報が返る(): void
+    public function test_ap_iで書籍一覧にジャンル情報が返る(): void
     {
         $genre = Genre::factory()->create([
             'name' => 'PHP',
@@ -702,11 +710,11 @@ class BookApiTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertJsonPath(
-            'data.0.genres.0.name','PHP'
+            'data.0.genres.0.name', 'PHP'
         );
     }
 
-    public function test_APIで書籍詳細に説明が返る(): void
+    public function test_ap_iで書籍詳細に説明が返る(): void
     {
         $book = Book::factory()->create([
             'description' => 'Laravelの入門書です。',
@@ -722,7 +730,7 @@ class BookApiTest extends TestCase
         );
     }
 
-    public function test_APIで書籍詳細にレビューが返る(): void
+    public function test_ap_iで書籍詳細にレビューが返る(): void
     {
         $book = Book::factory()->create();
 
@@ -741,7 +749,7 @@ class BookApiTest extends TestCase
         );
     }
 
-    public function test_APIで書籍詳細にジャンルが返る(): void
+    public function test_ap_iで書籍詳細にジャンルが返る(): void
     {
         $genre = Genre::factory()->create([
             'name' => 'PHP',
@@ -760,7 +768,7 @@ class BookApiTest extends TestCase
         );
     }
 
-    public function test_APIで書籍詳細にレビュー投降者情報が返る(): void
+    public function test_ap_iで書籍詳細にレビュー投降者情報が返る(): void
     {
         $user = User::factory()->create([
             'name' => '山田太郎',
@@ -785,7 +793,7 @@ class BookApiTest extends TestCase
         );
     }
 
-    public function test_APIで書籍詳細にレビュー評価が返る(): void
+    public function test_ap_iで書籍詳細にレビュー評価が返る(): void
     {
         $book = Book::factory()->create();
 
@@ -804,7 +812,7 @@ class BookApiTest extends TestCase
         );
     }
 
-    public function test_APIで書籍詳細にレビュー投稿日時が返る(): void
+    public function test_ap_iで書籍詳細にレビュー投稿日時が返る(): void
     {
         $book = Book::factory()->create();
 
@@ -821,9 +829,9 @@ class BookApiTest extends TestCase
                 'reviews' => [
                     [
                         'created_at',
-                    ]
-                ]
-            ]
+                    ],
+                ],
+            ],
         ]);
     }
 }

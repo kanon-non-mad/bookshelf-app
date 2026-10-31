@@ -10,13 +10,13 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        if(!Auth::attempt([
+        if (! Auth::attempt([
             'email' => $request->email,
             'password' => $request->password,
-        ])){
+        ])) {
             return response()->json([
                 'message' => '認証情報が正しくありません。',
-            ],401);
+            ], 401);
         }
         $user = $request->user();
         $token = $user->createToken('api-token')->plainTextToken;

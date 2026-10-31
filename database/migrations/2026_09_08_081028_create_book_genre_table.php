@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('book_genre', function (Blueprint $table) {
             $table->foreignId('book_id')->constrained();
             $table->foreignId('genre_id')->constrained();
-            $table->primary(['book_id','genre_id']);
+            $table->primary(['book_id', 'genre_id']);
         });
     }
 

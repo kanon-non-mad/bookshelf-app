@@ -19,9 +19,9 @@ class BookResource extends JsonResource
             'title' => $this->title,
             'author' => $this->author,
             'image_url' => $this->book_image
-                ? asset('storage/' .$this->book_image)
+                ? asset('storage/'.$this->book_image)
                 : null,
-            'reviews_count' =>$this->reviews_count,
+            'reviews_count' => $this->reviews_count,
             'average_rating' => $this->reviews_avg_rating,
             'genres' => GenreResource::collection(
                 $this->whenLoaded('genres')

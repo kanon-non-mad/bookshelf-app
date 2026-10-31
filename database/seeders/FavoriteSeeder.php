@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\User;
 use App\Models\Book;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 
 class FavoriteSeeder extends Seeder
 {
@@ -21,7 +20,7 @@ class FavoriteSeeder extends Seeder
                     '9784101010014',
                     '9784422100524',
                     '9784873115658',
-                    ],
+                ],
             ],
             [
                 'email' => 'suzuki@example.com',
@@ -55,16 +54,16 @@ class FavoriteSeeder extends Seeder
                     '9784163902302',
                     '9784822289607',
                     '9784822251468',
-                ]
+                ],
             ],
         ];
 
         foreach ($favorites as $data) {
             $user = User::where('email', $data['email'])
-            ->first();
+                ->first();
 
-            $bookIds = Book::whereIn('isbn',$data['isbns'])
-            ->pluck('id');
+            $bookIds = Book::whereIn('isbn', $data['isbns'])
+                ->pluck('id');
 
             $user->favoriteBooks()->syncWithoutDetaching($bookIds);
         }

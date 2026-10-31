@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Genre;
 use App\Http\Requests\StoreGenreRequest;
 use App\Http\Requests\UpdateGenreRequest;
-use Illuminate\Http\Request;
+use App\Models\Genre;
 
 class GenreController extends Controller
 {
@@ -36,7 +35,7 @@ class GenreController extends Controller
         Genre::create($validated);
 
         return redirect()->route('genres.index')
-            ->with('success','ジャンルを登録しました');
+            ->with('success', 'ジャンルを登録しました');
     }
 
     /**
@@ -77,7 +76,7 @@ class GenreController extends Controller
     public function destroy(Genre $genre)
     {
         if ($genre->books()->exists()) {
-        return back()->with('error', '使用中のジャンルは削除できません');
+            return back()->with('error', '使用中のジャンルは削除できません');
         }
 
         $genre->delete();

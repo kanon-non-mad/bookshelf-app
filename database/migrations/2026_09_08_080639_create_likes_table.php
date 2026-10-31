@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->foreignId('review_id')->constrained();
-            $table->unique(['user_id','review_id']);
+            $table->unique(['user_id', 'review_id']);
             $table->timestamps();
         });
     }

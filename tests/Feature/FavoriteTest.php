@@ -2,16 +2,16 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Models\Book;
 use App\Models\Favorite;
 use App\Models\User;
-use App\Models\Book;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class FavoriteTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -35,7 +35,8 @@ class FavoriteTest extends TestCase
         $response->assertViewHas('books');
     }
 
-    public function test_未ログインではお気に入り一覧を表示できない(): void {
+    public function test_未ログインではお気に入り一覧を表示できない(): void
+    {
         $response = $this->get('/favorites');
 
         $response->assertStatus(302);
@@ -55,7 +56,7 @@ class FavoriteTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('favorites',[
+        $this->assertDatabaseHas('favorites', [
             'user_id' => $user->id,
             'book_id' => $book->id,
         ]);
@@ -78,7 +79,7 @@ class FavoriteTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseMissing('favorites',[
+        $this->assertDatabaseMissing('favorites', [
             'user_id' => $user->id,
             'book_id' => $book->id,
         ]);

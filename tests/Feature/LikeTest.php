@@ -2,17 +2,17 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
-use App\Models\Like;
-use App\Models\User;
 use App\Models\Book;
+use App\Models\Like;
 use App\Models\Review;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class LikeTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
@@ -33,7 +33,7 @@ class LikeTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('likes',[
+        $this->assertDatabaseHas('likes', [
             'user_id' => $user->id,
             'review_id' => $review->id,
         ]);
@@ -61,7 +61,7 @@ class LikeTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseMissing('likes',[
+        $this->assertDatabaseMissing('likes', [
             'user_id' => $user->id,
             'review_id' => $review->id,
         ]);
@@ -77,7 +77,7 @@ class LikeTest extends TestCase
             'user_id' => $user->id,
             'book_id' => $book->id,
         ]);
-        
+
         $response = $this->post("/reviews/{$review->id}/likes");
 
         $response->assertStatus(302);

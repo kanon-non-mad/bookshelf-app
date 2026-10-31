@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Book extends Model
 {
@@ -20,8 +20,8 @@ class Book extends Model
         'published_at',
         'description',
         'book_image',
-        ];
-    
+    ];
+
     protected $casts = [
         'published_at' => 'date',
     ];
@@ -35,6 +35,7 @@ class Book extends Model
     {
         return $this->hasMany(Review::class);
     }
+
     public function favorites(): HasMany
     {
         return $this->hasMany(Favorite::class);
@@ -52,6 +53,6 @@ class Book extends Model
 
     public function favoritedUsers(): BelongsToMany
     {
-    return $this->belongsToMany(User::class, 'favorites');
+        return $this->belongsToMany(User::class, 'favorites');
     }
 }

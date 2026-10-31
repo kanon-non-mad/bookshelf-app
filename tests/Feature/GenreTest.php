@@ -2,20 +2,20 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
+use App\Models\Book;
 use App\Models\Genre;
 use App\Models\User;
-use App\Models\Book;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class GenreTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * A basic feature test example.
      */
-    public function test_ジャンル一覧を表示できる(): void 
+    public function test_ジャンル一覧を表示できる(): void
     {
         $user = User::factory()->create();
 
@@ -36,7 +36,7 @@ class GenreTest extends TestCase
 
         $response->assertRedirect('/login');
     }
-    
+
     public function test_ジャンル登録成功(): void
     {
         $user = User::factory()->create();
@@ -47,16 +47,16 @@ class GenreTest extends TestCase
             'name' => '技術書',
         ];
 
-        $response = $this->post('/genres',$data);
+        $response = $this->post('/genres', $data);
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseHas('genres',[
+        $this->assertDatabaseHas('genres', [
             'name' => '技術書',
         ]);
     }
 
-    public function test_必須項目が空の時、ジャンルが登録できない(): void 
+    public function test_必須項目が空の時、ジャンルが登録できない(): void
     {
         $user = User::factory()->create();
 
@@ -64,7 +64,7 @@ class GenreTest extends TestCase
 
         $data = [];
 
-        $response = $this->post('/genres',$data);
+        $response = $this->post('/genres', $data);
 
         $response->assertStatus(302);
 
@@ -90,11 +90,12 @@ class GenreTest extends TestCase
         $response->assertStatus(302);
 
         $response->assertSessionHasErrors([
-            'name'
+            'name',
         ]);
     }
 
-    public function test_使用してないジャンルを削除できる(): void {
+    public function test_使用してないジャンルを削除できる(): void
+    {
         $user = User::factory()->create();
 
         $this->actingAs($user);
@@ -107,12 +108,13 @@ class GenreTest extends TestCase
 
         $response->assertStatus(302);
 
-        $this->assertDatabaseMissing('genres',[
+        $this->assertDatabaseMissing('genres', [
             'id' => $genre->id,
         ]);
     }
 
-    public function test_使用中のジャンルを削除できない(): void {
+    public function test_使用中のジャンルを削除できない(): void
+    {
         $user = User::factory()->create();
 
         $this->actingAs($user);

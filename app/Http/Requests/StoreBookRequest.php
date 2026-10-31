@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -18,7 +19,7 @@ class StoreBookRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -31,18 +32,18 @@ class StoreBookRequest extends FormRequest
         }
 
         return [
-            'title' => ['required','string'],
-            'author' => ['required','string'],
+            'title' => ['required', 'string'],
+            'author' => ['required', 'string'],
             'isbn' => [
                 'required',
                 'digits:13',
                 $isbnRule,
             ],
-            'published_at' => ['nullable','date'],
-            'description' => ['nullable','string'],
-            'book_image' => ['nullable','string','url'],
-            'genres' => ['required','array','min:1'],
-            'genres.*' => ['integer','exists:genres,id'],
+            'published_at' => ['nullable', 'date'],
+            'description' => ['nullable', 'string'],
+            'book_image' => ['nullable', 'string', 'url'],
+            'genres' => ['required', 'array', 'min:1'],
+            'genres.*' => ['integer', 'exists:genres,id'],
         ];
     }
 

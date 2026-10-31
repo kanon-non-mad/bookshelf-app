@@ -2,10 +2,8 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Tests\TestCase;
 use App\Models\User;
+use Tests\TestCase;
 
 class AuthTest extends TestCase
 {
@@ -32,7 +30,7 @@ class AuthTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_ゲストユーザーがログイン済みページに入れない(): void 
+    public function test_ゲストユーザーがログイン済みページに入れない(): void
     {
         $user = User::factory()->create();
 
