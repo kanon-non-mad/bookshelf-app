@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('target_date');
             $table->string('status')->default('未着手');
             $table->unique(['user_id', 'book_id']);
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
         });
     }

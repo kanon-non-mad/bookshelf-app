@@ -4,15 +4,15 @@ namespace App\Enums;
 
 enum ReadingPlanStatus: string
 {
-    case NotStarted = '未着手';
-    case Reading = '読書中';
-    case Completed = '完了';
+    case NotStarted = 'not_started';
+    case Reading = 'in_progress';
+    case Completed = 'completed';
 
     public function label(): string
     {
         return match ($this) {
             ReadingPlanStatus::NotStarted => '未着手',
-            ReadingPlanStatus::Reading => '読書中',
+            ReadingPlanStatus::InProgress => '読書中',
             ReadingPlanStatus::Completed => '完了',
         };
     }

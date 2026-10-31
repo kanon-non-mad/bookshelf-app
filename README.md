@@ -113,21 +113,21 @@ Authorization: Bearer {token}
 
 ### 書籍API
 
-| Method     | URL                | 認証 | 概要         |
-| ---------- | ------------------ | ---- | ------------ |
-| GET        | /api/v1/books      | 不要 | 書籍一覧取得 |
-| GET        | /api/v1/books/{id} | 不要 | 書籍詳細取得 |
-| POST       | /api/v1/books      | 必要 | 書籍登録     |
-| PUT/PATCH  | /api/v1/books/{id} | 必要 | 書籍更新     |
-| DELETE     | /api/v1/books/{id} | 必要 | 書籍削除     |
+| Method    | URL                | 認証 | 概要         |
+| --------- | ------------------ | ---- | ------------ |
+| GET       | /api/v1/books      | 不要 | 書籍一覧取得 |
+| GET       | /api/v1/books/{id} | 不要 | 書籍詳細取得 |
+| POST      | /api/v1/books      | 必要 | 書籍登録     |
+| PUT/PATCH | /api/v1/books/{id} | 必要 | 書籍更新     |
+| DELETE    | /api/v1/books/{id} | 必要 | 書籍削除     |
 
 ### APIクエリパラメータ
 
-| Parameter | 説明               |
-| --------- | ------------------ |
-| keyword   | タイトル・著者検索 |
-| genre_id  | ジャンル検索       |
-| genre_id | ジャンル検索（互換用） |
+| Parameter | 説明                   |
+| --------- | ---------------------- |
+| keyword   | タイトル・著者検索     |
+| genre_id  | ジャンル検索           |
+| genre_id  | ジャンル検索（互換用） |
 
 ## テスト結果
 
