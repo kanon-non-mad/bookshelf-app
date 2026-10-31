@@ -22,7 +22,7 @@ class BookController extends Controller
     public function index(Request $request)
     {
         $keyword = $request->query('keyword');
-        $genreId = $request->query('genre_id');
+        $genreId = $request->query('genre') ?? $request->query('genre_id');
         $query = Book::with('genres');
 
         if (! empty($keyword)) {

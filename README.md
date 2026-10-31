@@ -16,6 +16,16 @@
 - Laravel Sail
 - Laravel Sanctum
 
+## 開発ルール
+
+Laravel Pintを使用してコード整形を行っています。
+
+確認コマンド:
+
+```bash
+sail bin pint --test
+```
+
 ## ER図
 
 ```mermaid
@@ -73,14 +83,17 @@ cp .env.example .env
 - いいね機能
 - ジャンル管理
 - 読書計画管理
-    - 読書予定の登録
-    - 読書予定日の変更
+    - 読書予定日の登録・変更
     - 読書完了状態への変更
     - 読書計画の削除
 
 ## API仕様
 
-書き込み系APIでは Laravel Sanctum の Bearer Token認証を使用しています。
+### 認可
+
+書籍の更新・削除APIでは Laravel Policy を使用しています。
+
+登録したユーザー本人のみ更新・削除が可能です。
 
 ### 認証
 
@@ -100,13 +113,13 @@ Authorization: Bearer {token}
 
 ### 書籍API
 
-| Method | URL                | 認証 | 概要         |
-| ------ | ------------------ | ---- | ------------ |
-| GET    | /api/v1/books      | 不要 | 書籍一覧取得 |
-| GET    | /api/v1/books/{id} | 不要 | 書籍詳細取得 |
-| POST   | /api/v1/books      | 必要 | 書籍登録     |
-| PATCH  | /api/v1/books/{id} | 必要 | 書籍更新     |
-| DELETE | /api/v1/books/{id} | 必要 | 書籍削除     |
+| Method     | URL                | 認証 | 概要         |
+| ---------- | ------------------ | ---- | ------------ |
+| GET        | /api/v1/books      | 不要 | 書籍一覧取得 |
+| GET        | /api/v1/books/{id} | 不要 | 書籍詳細取得 |
+| POST       | /api/v1/books      | 必要 | 書籍登録     |
+| PUT/PATCH  | /api/v1/books/{id} | 必要 | 書籍更新     |
+| DELETE     | /api/v1/books/{id} | 必要 | 書籍削除     |
 
 ### APIクエリパラメータ
 
@@ -114,6 +127,7 @@ Authorization: Bearer {token}
 | --------- | ------------------ |
 | keyword   | タイトル・著者検索 |
 | genre_id  | ジャンル検索       |
+| genre_id | ジャンル検索（互換用） |
 
 ## テスト結果
 
