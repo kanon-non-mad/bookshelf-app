@@ -15,7 +15,9 @@ use Symfony\Component\HttpFoundation\Response;
 class BookController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * 書籍一覧を取得する。
+     *
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
@@ -64,7 +66,9 @@ class BookController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 書籍を登録する。
+     *
+     * @return BookResource
      */
     public function store(StoreBookRequest $request)
     {
@@ -106,7 +110,7 @@ class BookController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 書籍情報を更新する。
      */
     public function update(StoreBookRequest $request, Book $book): BookResource|JsonResponse
     {
@@ -126,7 +130,7 @@ class BookController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 書籍を削除する。
      */
     public function destroy(Book $book): JsonResponse
     {

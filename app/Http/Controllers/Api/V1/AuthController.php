@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    /**
+     * ユーザーを認証し、APIトークンを発行する。
+     *
+     * @param  Request  $request  ログイン情報を含むリクエスト
+     * @return JsonResponse 認証結果とトークン
+     */
     public function login(Request $request)
     {
         if (! Auth::attempt([
