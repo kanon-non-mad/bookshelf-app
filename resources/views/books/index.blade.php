@@ -80,8 +80,8 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             @foreach($books as $book)
                                 <a href="{{ route('books.show', $book) }}" class="block border rounded-lg p-4 shadow hover:shadow-lg transition cursor-pointer">
-                                    @if($book->image_url)
-                                        <img src="{{ $book->image_url }}" alt="{{ $book->title }}" class="w-full h-48 object-cover mb-4 rounded">
+                                    @if($book->book_image)
+                                        <img src="{{ $book->book_image }}" alt="{{ $book->title }}" class="w-full h-48 object-cover mb-4 rounded">
                                     @else
                                         <div class="w-full h-48 bg-gray-200 flex items-center justify-center mb-4 rounded">
                                             <span class="text-gray-500">画像なし</span>
