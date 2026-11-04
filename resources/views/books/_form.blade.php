@@ -71,14 +71,14 @@
 
     <!-- 画像URL -->
     <div>
-        <label for="image_url" class="block font-medium text-sm text-gray-700 mb-1">
+        <label for="book_image" class="block font-medium text-sm text-gray-700 mb-1">
             画像URL
         </label>
-        <input type="text" name="image_url" id="image_url" value="{{ old('image_url', $book->image_url ?? '') }}"
+        <input type="text" name="book_image" id="book_image" value="{{ old('book_image', $book->book_image ?? '') }}"
             class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full"
             placeholder="https://example.com/image.jpg">
         <p class="text-xs text-gray-500 mt-1">書籍の表紙画像のURLを入力してください（任意）</p>
-        @error('image_url')
+        @error('book_image')
             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
         @enderror
     </div>
