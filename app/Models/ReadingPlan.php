@@ -21,6 +21,7 @@ class ReadingPlan extends Model
     protected $casts = [
         'target_date' => 'date',
         'status' => ReadingPlanStatus::class,
+        'completed_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

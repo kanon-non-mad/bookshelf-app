@@ -4,9 +4,9 @@ namespace App\Enums;
 
 enum ReadingPlanStatus: string
 {
-    case NotStarted = '未着手';
-    case Reading = '読書中';
-    case Completed = '完了';
+    case NotStarted = 'not_started';
+    case Reading = 'in_progress';
+    case Completed = 'completed';
 
     public function label(): string
     {
