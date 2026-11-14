@@ -21,9 +21,9 @@
                     <x-nav-link :href="route('books.index')" :active="request()->routeIs('books.index')">
                         {{ __('書籍一覧') }}
                     </x-nav-link>
-                    {{--<x-nav-link :href="route('ranking.index')" :active="request()->routeIs('ranking.index')">
+                    <x-nav-link :href="route('ranking.index')" :active="request()->routeIs('ranking.index')">
                         {{ __('ランキング') }}
-                    </x-nav-link>--}}
+                    </x-nav-link>
                     <x-nav-link :href="route('books.create')" :active="request()->routeIs('books.create')">
                         {{ __('書籍登録') }}
                     </x-nav-link>

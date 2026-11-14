@@ -26,6 +26,10 @@ Route::get('/', function () {
     return redirect()->route('books.index');
 });
 
+// RankingController
+    Route::get('/ranking', [RankingController::class, 'index'])
+        ->name('ranking.index');
+
 // BookController
 Route::middleware('auth')->group(function () {
     Route::resource('books', BookController::class)
@@ -56,10 +60,6 @@ Route::middleware('auth')->group(function () {
         ->except(['show']);
     Route::post('reading-plans/{reading_plan}/complete', [ReadingPlanController::class, 'complete'])
         ->name('reading-plans.complete');
-
-    // RankingController
-    Route::get('/ranking', [RankingController::class, 'index'])
-        ->name('ranking.index');
 
     // ReportController
     Route::get('/reports', [ReportController::class, 'index'])
