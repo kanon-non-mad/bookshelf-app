@@ -62,7 +62,9 @@ class ReportController extends Controller
                     'count' => $items->count(),
                     'average_rating' => $items->avg('rating'),
                 ];
-            });
+            })
+            ->sortByDesc('average_rating')
+            ->take(5);
         
         $stats = [
             'summary' => [

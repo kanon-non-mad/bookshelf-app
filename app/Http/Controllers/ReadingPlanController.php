@@ -17,12 +17,15 @@ class ReadingPlanController extends Controller
      */
     public function index(Request $request)
     {
+        $currentStatus = $request->input('status');
+
         $readingPlans = auth()->user()
             ->readingPlans()
             ->with('book')
+            ->when($currentStatus, function ($query) use ($currentStatus){
+                $query->where('status', $currentStatus);
+            })
             ->get();
-
-        $currentStatus = $request->input('status');
 
         return view('reading-plans.index', compact('readingPlans', 'currentStatus'));
     }

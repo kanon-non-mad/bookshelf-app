@@ -118,11 +118,11 @@
                                         @enderror
                                     </div>
                                     <div class="mb-4">
-                                        <label for="comment" class="block text-sm font-medium text-gray-700 mb-1">コメント</label>
-                                        <textarea name="comment" id="comment" rows="3"
+                                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">コメント</label>
+                                        <textarea name="content" id="content" rows="3"
                                             class="border-gray-300 rounded-md shadow-sm w-full"
-                                            placeholder="この書籍の感想を書いてください">{{ old('comment') }}</textarea>
-                                        @error('comment')
+                                            placeholder="この書籍の感想を書いてください">{{ old('content') }}</textarea>
+                                        @error('content')
                                             <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -153,8 +153,8 @@
                                             </div>
                                             <span class="text-sm text-gray-500">{{ $review->created_at->format('Y/m/d') }}</span>
                                         </div>
-                                        @if($review->comment)
-                                            <p class="text-gray-700">{{ $review->comment }}</p>
+                                        @if($review->content)
+                                            <p class="text-gray-700">{{ $review->content }}</p>
                                         @endif
 
                                         <div class="mt-3 flex items-center justify-between">

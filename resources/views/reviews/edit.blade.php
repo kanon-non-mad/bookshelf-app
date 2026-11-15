@@ -33,9 +33,9 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="comment" class="block text-sm font-medium text-gray-700 mb-2">コメント</label>
-                            <textarea name="comment" id="comment" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('comment', $review->comment) }}</textarea>
-                            @error('comment')
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">コメント</label>
+                            <textarea name="content" id="content" rows="4" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">{{ old('content', $review->content) }}</textarea>
+                            @error('content')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
