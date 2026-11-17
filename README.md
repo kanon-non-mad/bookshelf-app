@@ -16,6 +16,8 @@
 - Docker
 - Laravel Sail
 - Laravel Sanctum
+- Vite
+- Tailwind CSS
 
 ## 開発ルール
 
@@ -37,6 +39,7 @@ erDiagram
     users ||--o{ favorites : creates
     users ||--o{ likes : creates
     users ||--o{ reading_plans : creates
+    users ||--o{ notifications : receives
 
     books ||--o{ reviews : has
     books ||--o{ favorites : receives
