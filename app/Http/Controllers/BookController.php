@@ -48,7 +48,7 @@ class BookController extends Controller
 
         $genres = Genre::all();
 
-        return view('books.index', compact('books','genres'));
+        return view('books.index', compact('books', 'genres'));
     }
 
     public function create()

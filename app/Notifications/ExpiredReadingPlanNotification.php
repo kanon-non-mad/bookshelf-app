@@ -3,8 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class ExpiredReadingPlanNotification extends Notification
@@ -12,6 +10,7 @@ class ExpiredReadingPlanNotification extends Notification
     use Queueable;
 
     public $readingPlan;
+
     /**
      * Create a new notification instance.
      */
@@ -37,7 +36,7 @@ class ExpiredReadingPlanNotification extends Notification
     {
         return [
             'title' => '期限切れのお知らせ',
-            'body' => $this->readingPlan->book->title . 'の読書計画が期限切れになりました',
+            'body' => $this->readingPlan->book->title.'の読書計画が期限切れになりました',
             'timing' => '期限切れ',
         ];
     }

@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\ReadingPlan;
 use App\Enums\ReadingPlanStatus;
-use Carbon\Carbon;
+use App\Models\ReadingPlan;
 use App\Notifications\ExpiredReadingPlanNotification;
+use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class DailyReadingPlanCommand extends Command
 {
@@ -32,20 +32,20 @@ class DailyReadingPlanCommand extends Command
         $today = Carbon::today();
 
         $expiredPlans = ReadingPlan::whereDate('target_date', '<', $today)
-        ->whereIn('status', [
-            ReadingPlanStatus::NotStarted,
-            ReadingPlanStatus::Reading,
-        ])
-        ->get();
+            ->whereIn('status', [
+                ReadingPlanStatus::NotStarted,
+                ReadingPlanStatus::Reading,
+            ])
+            ->get();
 
-        foreach($expiredPlans as $expiredPlan) {
-                $expiredPlan->status = ReadingPlanStatus::Expired;
+        foreach ($expiredPlans as $expiredPlan) {
+            $expiredPlan->status = ReadingPlanStatus::Expired;
 
-                $expiredPlan->save();
+            $expiredPlan->save();
 
-                $expiredPlan->user->notify(
-                    new ExpiredReadingPlanNotification($expiredPlan)
-                );
-            }
+            $expiredPlan->user->notify(
+                new ExpiredReadingPlanNotification($expiredPlan)
+            );
+        }
     }
 }

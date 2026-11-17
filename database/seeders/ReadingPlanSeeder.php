@@ -2,12 +2,11 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Book;
-use App\Models\User;
 use App\Models\ReadingPlan;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class ReadingPlanSeeder extends Seeder
 {
@@ -16,9 +15,9 @@ class ReadingPlanSeeder extends Seeder
      */
     public function run(): void
     {
-        $yamada = User::where('email','yamada@example.com')->first();
+        $yamada = User::where('email', 'yamada@example.com')->first();
 
-        $suzuki = User::where('email','suzuki@example.com')->first();
+        $suzuki = User::where('email', 'suzuki@example.com')->first();
 
         $books = Book::take(6)->get();
 

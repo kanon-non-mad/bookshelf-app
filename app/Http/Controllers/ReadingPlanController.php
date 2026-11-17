@@ -22,7 +22,7 @@ class ReadingPlanController extends Controller
         $readingPlans = auth()->user()
             ->readingPlans()
             ->with('book')
-            ->when($currentStatus, function ($query) use ($currentStatus){
+            ->when($currentStatus, function ($query) use ($currentStatus) {
                 $query->where('status', $currentStatus);
             })
             ->get();

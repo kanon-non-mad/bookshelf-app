@@ -64,5 +64,5 @@ class ReviewSeeder extends Seeder
                 ]);
             }
         }
-    }      
+    }
 }

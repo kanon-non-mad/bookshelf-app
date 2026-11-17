@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Enums\ReadingPlanStatus;
 
 class ReportController extends Controller
@@ -12,7 +11,7 @@ class ReportController extends Controller
         $user = auth()->user();
 
         $completedCount = $user->readingPlans()
-            ->where('status',ReadingPlanStatus::Completed)
+            ->where('status', ReadingPlanStatus::Completed)
             ->distinct('book_id')
             ->count('book_id');
 
@@ -27,18 +26,18 @@ class ReportController extends Controller
         $topRatedBooks = $user->reviews()
             ->with('book')
             ->where('rating', '>=', 4)
-            ->orderBy('rating','desc')
+            ->orderBy('rating', 'desc')
             ->limit(5)
             ->get()
             ->map(function ($review) {
-                return[
+                return [
                     'id' => $review->book->id,
                     'title' => $review->book->title,
                     'author' => $review->book->author,
                     'rating' => $review->rating,
-                    ];
-                });
-        
+                ];
+            });
+
         $reviews = $user->reviews()
             ->with('book.genres')
             ->get();
@@ -46,7 +45,7 @@ class ReportController extends Controller
         $genreRatings = $reviews
             ->flatMap(function ($review) {
                 return $review->book->genres->map(function ($genre) use ($review) {
-                    return[
+                    return [
                         'genre' => $genre,
                         'rating' => $review->rating,
                     ];
@@ -65,7 +64,7 @@ class ReportController extends Controller
             })
             ->sortByDesc('average_rating')
             ->take(5);
-        
+
         $stats = [
             'summary' => [
                 'total_reviews' => $user->reviews()->count(),
@@ -77,8 +76,8 @@ class ReportController extends Controller
             'genre_ratings' => $genreRatings,
         ];
 
-        return view('reports.index',[
+        return view('reports.index', [
             'stats' => $stats,
-            ]);
+        ]);
     }
 }
