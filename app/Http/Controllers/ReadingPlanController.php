@@ -7,15 +7,20 @@ use App\Http\Requests\StoreReadingPlanRequest;
 use App\Http\Requests\UpdateReadingPlanRequest;
 use App\Models\Book;
 use App\Models\ReadingPlan;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class ReadingPlanController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     *読書計画一覧を表示する
+     *
+     * @param Request $request
+     * @return View
      */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $currentStatus = $request->input('status');
 
@@ -31,9 +36,11 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * 読書計画登録画面を表示する
+     * 
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
         $books = Book::orderBy('title')->get();
 
@@ -41,9 +48,12 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 読書計画を登録する
+     * 
+     * @param StoreReadingPlanRequest $request
+     * @return RedirectResponse
      */
-    public function store(StoreReadingPlanRequest $request)
+    public function store(StoreReadingPlanRequest $request): RedirectResponse
     {
         ReadingPlan::create([
             'user_id' => Auth::id(),
@@ -57,9 +67,12 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * 読書計画編集画面を表示する
+     * 
+     * @param ReadingPlan $readingPlan
+     * @return View
      */
-    public function edit(ReadingPlan $readingPlan)
+    public function edit(ReadingPlan $readingPlan): View
     {
         $this->authorize('update', $readingPlan);
 
@@ -69,9 +82,13 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 読書計画を更新する
+     * 
+     * @param UpdateReadingPlanRequest $request
+     * @param ReadingPlan $readingPlan
+     * @return RedirectResponse
      */
-    public function update(UpdateReadingPlanRequest $request, ReadingPlan $readingPlan)
+    public function update(UpdateReadingPlanRequest $request, ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('update', $readingPlan);
 
@@ -82,7 +99,13 @@ class ReadingPlanController extends Controller
         return redirect()->route('reading-plans.index');
     }
 
-    public function complete(ReadingPlan $readingPlan)
+    /**
+     * 読書計画を完了状態に変更する
+     * 
+     * @param ReadingPlan $readingPlan
+     * @return RedirectResponse
+     */
+    public function complete(ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('update', $readingPlan);
 
@@ -93,9 +116,12 @@ class ReadingPlanController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 読書計画を削除する
+     *
+     * @param ReadingPlan $readingPlan
+     * @return RedirectResponse
      */
-    public function destroy(ReadingPlan $readingPlan)
+    public function destroy(ReadingPlan $readingPlan): RedirectResponse
     {
         $this->authorize('delete', $readingPlan);
 

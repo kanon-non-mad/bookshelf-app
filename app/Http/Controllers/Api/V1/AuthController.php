@@ -3,18 +3,19 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     /**
-     * ユーザーを認証し、APIトークンを発行する。
+     * ユーザーを認証し、APIトークンを発行する
      *
-     * @param  Request  $request  ログイン情報を含むリクエスト
-     * @return JsonResponse 認証結果とトークン
+     * @param  Request  $request
+     * @return JsonResponse
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         if (! Auth::attempt([
             'email' => $request->email,

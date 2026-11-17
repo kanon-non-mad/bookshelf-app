@@ -3,10 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use Illuminate\View\View;
 
 class RankingController extends Controller
 {
-    public function index()
+    /**
+     * 書籍ランキングを表示する
+     * 
+     * @return View
+     */
+    public function index(): View
     {
         $rankedBooks = Book::whereHas('reviews')
             ->withAvg('reviews', 'rating')

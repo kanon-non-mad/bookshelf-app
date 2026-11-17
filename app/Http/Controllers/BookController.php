@@ -5,11 +5,19 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreBookRequest;
 use App\Models\Book;
 use App\Models\Genre;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class BookController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * 書籍一覧を表示する
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function index(Request $request): View
     {
         $keyword = $request->query('keyword');
 
@@ -51,14 +59,25 @@ class BookController extends Controller
         return view('books.index', compact('books', 'genres'));
     }
 
-    public function create()
+    /**
+     * 書籍登録画面を表示する
+     *
+     * @return View
+     */
+    public function create(): View
     {
         $genres = Genre::all();
 
         return view('books.create', compact('genres'));
     }
 
-    public function store(StoreBookRequest $request)
+    /**
+     * 書籍を登録する
+     *
+     * @param StoreBookRequest $request
+     * @return RedirectResponse
+     */
+    public function store(StoreBookRequest $request): RedirectResponse
     {
         $data = $request->validated();
         $genreIds = $data['genres'];
@@ -70,7 +89,13 @@ class BookController extends Controller
         return redirect()->route('books.index');
     }
 
-    public function show(Book $book)
+    /**
+     * 書籍詳細を表示する
+     *
+     * @param Book $book
+     * @return View
+     */
+    public function show(Book $book): View
     {
         $book->load([
             'genres', 'reviews.user', 'reviews.likes',
@@ -79,15 +104,27 @@ class BookController extends Controller
         return view('books.show', compact('book'));
     }
 
-    public function edit(Book $book)
+    /**
+     * 書籍編集画面を表示する
+     *
+     * @param Book $book
+     * @return View
+     */
+    public function edit(Book $book): View
     {
         $genres = Genre::all();
 
         return view('books.edit', compact('book', 'genres'));
-
     }
 
-    public function update(StoreBookRequest $request, Book $book)
+    /**
+     * 書籍を更新する
+     *
+     * @param StoreBookRequest $request
+     * @param Book $book
+     * @return RedirectResponse
+     */
+    public function update(StoreBookRequest $request, Book $book): RedirectResponse
     {
         $this->authorize('update', $book);
         $data = $request->validated();
@@ -99,7 +136,13 @@ class BookController extends Controller
         return redirect()->route('books.index');
     }
 
-    public function destroy(Book $book)
+    /**
+     * 書籍を削除する
+     *
+     * @param Book $book
+     * @return RedirectResponse
+     */
+    public function destroy(Book $book): RedirectResponse
     {
         $this->authorize('delete', $book);
         foreach ($book->reviews as $review) {

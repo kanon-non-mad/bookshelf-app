@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Favorite;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class FavoriteController extends Controller
 {
-    public function index()
+    /**
+     * お気に入り一覧を表示する
+     *
+     * @return View
+     */
+    public function index(): View
     {
         $books = Auth::user()
             ->favoriteBooks()
@@ -17,7 +24,13 @@ class FavoriteController extends Controller
         return view('favorites.index', compact('books'));
     }
 
-    public function toggle(Book $book)
+    /**
+     * お気に入り登録・解除を切り替える
+     *
+     * @param Book $book
+     * @return RedirectResponse
+     */
+    public function toggle(Book $book): RedirectResponse
     {
         if (Favorite::where([
             'user_id' => Auth::id(),

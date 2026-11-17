@@ -8,6 +8,7 @@ use App\Http\Resources\BookDetailResource;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +16,12 @@ use Symfony\Component\HttpFoundation\Response;
 class BookController extends Controller
 {
     /**
-     * 書籍一覧を取得する。
+     * 書籍一覧を取得する
      *
+     * @param Request $request
      * @return AnonymousResourceCollection
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $keyword = $request->query('keyword');
         $genreId = $request->query('genre') ?? $request->query('genre_id');
@@ -51,8 +53,6 @@ class BookController extends Controller
             $query->orderBy('title', 'asc');
         }
 
-        $query->withAvg('reviews', 'rating');
-
         if ($sort === 'rating') {
             $query->orderByDesc('reviews_avg_rating');
         }
@@ -66,11 +66,12 @@ class BookController extends Controller
     }
 
     /**
-     * 書籍を登録する。
+     * 書籍を登録する
      *
-     * @return BookResource
+     * @param StoreBookRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreBookRequest $request)
+    public function store(StoreBookRequest $request): JsonResponse
     {
         $data = $request->validated();
         $genreIds = $data['genres'];
@@ -90,9 +91,12 @@ class BookController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * 書籍詳細を表示する
+     * 
+     * @param Book $book
+     * @return BookDetailResource
      */
-    public function show(Book $book)
+    public function show(Book $book): BookDetailResource
     {
         $book->loadCount('reviews')
             ->loadAvg('reviews', 'rating');
@@ -110,9 +114,13 @@ class BookController extends Controller
     }
 
     /**
-     * 書籍情報を更新する。
+     * 書籍情報を更新する
+     * 
+     * @param StoreBookRequest $request
+     * @param Book $book
+     * @return JsonResponse
      */
-    public function update(StoreBookRequest $request, Book $book): BookResource|JsonResponse
+    public function update(StoreBookRequest $request, Book $book): JsonResponse
     {
         $this->authorize('update', $book);
         $data = $request->validated();
@@ -130,7 +138,10 @@ class BookController extends Controller
     }
 
     /**
-     * 書籍を削除する。
+     * 書籍を削除する
+     * 
+     * @param Book $book
+     * @return JsonResponse
      */
     public function destroy(Book $book): JsonResponse
     {

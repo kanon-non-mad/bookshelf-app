@@ -5,11 +5,20 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Book;
 use App\Models\Review;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class ReviewController extends Controller
 {
-    public function store(StoreReviewRequest $request, Book $book)
+    /**
+     * レビューを登録する
+     *
+     * @param StoreReviewRequest $request
+     * @param Book $book
+     * @return RedirectResponse
+     */
+    public function store(StoreReviewRequest $request, Book $book): RedirectResponse
     {
         $data = $request->validated();
         $data['user_id'] = Auth::id();
@@ -19,18 +28,36 @@ class ReviewController extends Controller
         return redirect()->route('books.show', $book);
     }
 
-    public function create(Book $book)
+    /**
+     * レビュー投稿画面を表示する
+     *
+     * @param Book $book
+     * @return View
+     */
+    public function create(Book $book): View
     {
         return view('reviews.create', compact('book'));
     }
 
-    public function edit(Review $review)
+    /**
+     * レビュー編集画面を表示する
+     *
+     * @param Review $review
+     * @return View
+     */
+    public function edit(Review $review): View
     {
         return view('reviews.edit', compact('review'));
-
     }
 
-    public function update(StoreReviewRequest $request, Review $review)
+    /**
+     * レビューを更新する
+     *
+     * @param StoreReviewRequest $request
+     * @param Review $review
+     * @return RedirectResponse
+     */
+    public function update(StoreReviewRequest $request, Review $review): RedirectResponse
     {
         $this->authorize('update', $review);
 
@@ -40,9 +67,15 @@ class ReviewController extends Controller
         return redirect()->route('books.show', $review->book_id);
     }
 
-    public function destroy(Review $review)
+    /**
+     * レビューを削除する
+     *
+     * @param Review $review
+     * @return RedirectResponse
+     */
+    public function destroy(Review $review): RedirectResponse
     {
-        $this->authorize('update', $review);
+        $this->authorize('delete', $review);
 
         $review->likes()->delete();
         $review->delete();

@@ -4,11 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Like;
 use App\Models\Review;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
-    public function toggle(Review $review)
+    /**
+     * いいね登録・解除を切り替える
+     * 
+     * @param Review $review
+     * @return RedirectResponse
+     */
+    public function toggle(Review $review): RedirectResponse
     {
         if (Like::where([
             'user_id' => Auth::id(),
