@@ -6,7 +6,7 @@
 
 ユーザーは書籍の登録・編集・削除、レビュー投稿、お気に入り登録、読書計画の管理などを行えます。
 また、API機能として書籍情報の取得・登録・更新・削除を提供しています。
-書籍一覧APIでは検索、ページネーション、レビュー情報・ジャンル情報の取得にも対応しています。
+書籍一覧APIでは検索、ページネーション、並び替え、レビュー情報・ジャンル情報・評価情報の取得にも対応しています。
 
 ## 使用技術
 
@@ -26,7 +26,7 @@ Laravel Pintを使用してコード整形を行っています。
 確認コマンド:
 
 ```bash
-sail bin pint --test
+./vendor/bin/sail bin pint --test
 ```
 
 ## ER図
@@ -86,6 +86,10 @@ cp .env.example .env
 - お気に入り機能
 - いいね機能
 - ジャンル管理
+
+## 応用機能
+
+- ISBN検索
 - 読書計画管理
     - 読書予定日の登録・変更
     - 読書完了状態への変更
@@ -135,6 +139,20 @@ Authorization: Bearer {token}
 | --------- | ------------------ |
 | keyword   | タイトル・著者検索 |
 | genre_id  | ジャンル検索       |
+| sort | 並び替え(oldest,title,rating) |
+
+### レスポンス情報
+
+書籍APIでは以下の情報を取得できます。
+
+- ジャンル情報
+- レビュー情報
+- レビュー投稿者情報
+- レビュー評価
+- レビュー投稿日時
+- レビュー件数
+- 平均評価
+- ページネーション情報
 
 ## テスト結果
 
@@ -142,7 +160,11 @@ Authorization: Bearer {token}
 
 ```bash
 ./vendor/bin/sail artisan test
-103 passed (234 assertions)
+110 passed (249 assertions)
+
+./vendor/bin/sail artisan test --coverage
+Total: 81.8%
+ (応用機能を含むカバレッジ)
 ```
 
 ## 開発環境URL
