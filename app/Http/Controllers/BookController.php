@@ -13,9 +13,6 @@ class BookController extends Controller
 {
     /**
      * 書籍一覧を表示する
-     *
-     * @param Request $request
-     * @return View
      */
     public function index(Request $request): View
     {
@@ -25,6 +22,8 @@ class BookController extends Controller
 
         $sort = $request->query('sort');
 
+        $isbn = $request->query('isbn');
+
         $query = Book::with('genres');
 
         if ($keyword) {
@@ -32,6 +31,10 @@ class BookController extends Controller
                 $query->where('title', 'LIKE', "%{$keyword}%")
                     ->orWhere('author', 'LIKE', "%{$keyword}%");
             });
+        }
+
+        if ($isbn) {
+            $query->where('isbn', $isbn);
         }
 
         if ($genreId) {
@@ -61,8 +64,6 @@ class BookController extends Controller
 
     /**
      * 書籍登録画面を表示する
-     *
-     * @return View
      */
     public function create(): View
     {
@@ -73,9 +74,6 @@ class BookController extends Controller
 
     /**
      * 書籍を登録する
-     *
-     * @param StoreBookRequest $request
-     * @return RedirectResponse
      */
     public function store(StoreBookRequest $request): RedirectResponse
     {
@@ -91,9 +89,6 @@ class BookController extends Controller
 
     /**
      * 書籍詳細を表示する
-     *
-     * @param Book $book
-     * @return View
      */
     public function show(Book $book): View
     {
@@ -106,9 +101,6 @@ class BookController extends Controller
 
     /**
      * 書籍編集画面を表示する
-     *
-     * @param Book $book
-     * @return View
      */
     public function edit(Book $book): View
     {
@@ -119,10 +111,6 @@ class BookController extends Controller
 
     /**
      * 書籍を更新する
-     *
-     * @param StoreBookRequest $request
-     * @param Book $book
-     * @return RedirectResponse
      */
     public function update(StoreBookRequest $request, Book $book): RedirectResponse
     {
@@ -138,9 +126,6 @@ class BookController extends Controller
 
     /**
      * 書籍を削除する
-     *
-     * @param Book $book
-     * @return RedirectResponse
      */
     public function destroy(Book $book): RedirectResponse
     {

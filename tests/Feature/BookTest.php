@@ -280,6 +280,27 @@ class BookTest extends TestCase
         $response->assertDontSee('PHP入門');
     }
 
+    public function test_isbnで書籍検索できる(): void
+    {
+        $targetBook = Book::factory()->create([
+            'isbn' => '1111111111111',
+            'title' => 'ISBN検索対象本',
+        ]);
+
+        $otherBook = Book::factory()->create([
+            'isbn' => '2222222222222',
+            'title' => '別の本',
+        ]);
+
+        $response = $this->get('/books?isbn=1111111111111');
+
+        $response->assertStatus(200);
+
+        $response->assertSee($targetBook->title);
+
+        $response->assertDontSee($otherBook->title);
+    }
+
     public function test_ジャンル_i_dを指定したら、そのジャンルを持つ本だけ返る(): void
     {
         $genreA = Genre::create([

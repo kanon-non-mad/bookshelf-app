@@ -8,8 +8,8 @@ use App\Http\Resources\BookDetailResource;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,9 +17,6 @@ class BookController extends Controller
 {
     /**
      * 書籍一覧を取得する
-     *
-     * @param Request $request
-     * @return AnonymousResourceCollection
      */
     public function index(Request $request): AnonymousResourceCollection
     {
@@ -67,9 +64,6 @@ class BookController extends Controller
 
     /**
      * 書籍を登録する
-     *
-     * @param StoreBookRequest $request
-     * @return JsonResponse
      */
     public function store(StoreBookRequest $request): JsonResponse
     {
@@ -92,9 +86,6 @@ class BookController extends Controller
 
     /**
      * 書籍詳細を表示する
-     * 
-     * @param Book $book
-     * @return BookDetailResource
      */
     public function show(Book $book): BookDetailResource
     {
@@ -115,10 +106,6 @@ class BookController extends Controller
 
     /**
      * 書籍情報を更新する
-     * 
-     * @param StoreBookRequest $request
-     * @param Book $book
-     * @return JsonResponse
      */
     public function update(StoreBookRequest $request, Book $book): JsonResponse
     {
@@ -139,9 +126,6 @@ class BookController extends Controller
 
     /**
      * 書籍を削除する
-     * 
-     * @param Book $book
-     * @return JsonResponse
      */
     public function destroy(Book $book): JsonResponse
     {

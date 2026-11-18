@@ -58,4 +58,42 @@ class NotificationTest extends TestCase
 
         $this->assertSame('期限切れ', $data['timing']);
     }
+
+    public function test_通知一覧を表示できる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $user->notify(new ExpiredReadingPlanNotification(
+            ReadingPlan::factory()->create([
+                'user_id' => $user->id,
+            ])
+        ));
+
+        $response = $this->get('/notifications');
+
+        $response->assertStatus(200);
+    }
+
+    public function test_通知を既読にできる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $user->notify(new ExpiredReadingPlanNotification(
+            ReadingPlan::factory()->create([
+                'user_id' => $user->id,
+            ])
+        ));
+
+        $notification = $user->notifications->first();
+
+        $response = $this->post("/notifications/{$notification->id}/read");
+
+        $response->assertRedirect('/notifications');
+
+        $this->assertNotNull($notification->fresh()->read_at);
+    }
 }

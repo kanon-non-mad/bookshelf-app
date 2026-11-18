@@ -11,9 +11,6 @@ class AuthController extends Controller
 {
     /**
      * ユーザーを認証し、APIトークンを発行する
-     *
-     * @param  Request  $request
-     * @return JsonResponse
      */
     public function login(Request $request): JsonResponse
     {

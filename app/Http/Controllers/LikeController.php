@@ -11,9 +11,6 @@ class LikeController extends Controller
 {
     /**
      * いいね登録・解除を切り替える
-     * 
-     * @param Review $review
-     * @return RedirectResponse
      */
     public function toggle(Review $review): RedirectResponse
     {

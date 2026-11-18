@@ -12,8 +12,6 @@ class FavoriteController extends Controller
 {
     /**
      * お気に入り一覧を表示する
-     *
-     * @return View
      */
     public function index(): View
     {
@@ -26,9 +24,6 @@ class FavoriteController extends Controller
 
     /**
      * お気に入り登録・解除を切り替える
-     *
-     * @param Book $book
-     * @return RedirectResponse
      */
     public function toggle(Book $book): RedirectResponse
     {

@@ -37,6 +37,53 @@ class GenreTest extends TestCase
         $response->assertRedirect('/login');
     }
 
+    public function test_ジャンル登録画面を表示できる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $response = $this->get('/genres/create');
+
+        $response->assertStatus(200);
+
+        $response->assertSee('ジャンル');
+    }
+
+    public function test_ジャンル詳細を表示できる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $genre = Genre::create([
+            'name' => '技術書',
+        ]);
+
+        $response = $this->get("/genres/{$genre->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertSee('技術書');
+    }
+
+    public function test_ジャンル編集画面を表示できる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $genre = Genre::create([
+            'name' => '技術書',
+        ]);
+
+        $response = $this->get("/genres/{$genre->id}/edit");
+
+        $response->assertStatus(200);
+
+        $response->assertSee('技術書');
+    }
+
     public function test_ジャンル登録成功(): void
     {
         $user = User::factory()->create();
@@ -53,6 +100,27 @@ class GenreTest extends TestCase
 
         $this->assertDatabaseHas('genres', [
             'name' => '技術書',
+        ]);
+    }
+
+    public function test_ジャンルを更新できる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        $genre = Genre::create([
+            'name' => '技術書',
+        ]);
+
+        $response = $this->patch("/genres/{$genre->id}", [
+            'name' => '小説',
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('genres', [
+            'name' => '小説',
         ]);
     }
 

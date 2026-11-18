@@ -13,10 +13,6 @@ class ReviewController extends Controller
 {
     /**
      * レビューを登録する
-     *
-     * @param StoreReviewRequest $request
-     * @param Book $book
-     * @return RedirectResponse
      */
     public function store(StoreReviewRequest $request, Book $book): RedirectResponse
     {
@@ -30,9 +26,6 @@ class ReviewController extends Controller
 
     /**
      * レビュー投稿画面を表示する
-     *
-     * @param Book $book
-     * @return View
      */
     public function create(Book $book): View
     {
@@ -41,9 +34,6 @@ class ReviewController extends Controller
 
     /**
      * レビュー編集画面を表示する
-     *
-     * @param Review $review
-     * @return View
      */
     public function edit(Review $review): View
     {
@@ -52,10 +42,6 @@ class ReviewController extends Controller
 
     /**
      * レビューを更新する
-     *
-     * @param StoreReviewRequest $request
-     * @param Review $review
-     * @return RedirectResponse
      */
     public function update(StoreReviewRequest $request, Review $review): RedirectResponse
     {
@@ -69,9 +55,6 @@ class ReviewController extends Controller
 
     /**
      * レビューを削除する
-     *
-     * @param Review $review
-     * @return RedirectResponse
      */
     public function destroy(Review $review): RedirectResponse
     {
