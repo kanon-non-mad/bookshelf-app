@@ -86,7 +86,7 @@
                     document.getElementById('author').value = data.author || '';
                     document.getElementById('isbn').value = isbn;
                     document.getElementById('description').value = data.description || '';
-                    document.getElementById('image_url').value = data.image_url || '';
+                    document.getElementById('book_image').value = data.book_image || '';
 
                     if (data.published_at) {
                         const date = new Date(data.published_at);

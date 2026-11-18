@@ -39,6 +39,9 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('genres', GenreController::class);
 
+    Route::get('/books/isbn/{isbn}', [BookController::class, 'searchIsbn'])
+        ->name('books.search-isbn');
+
     // ReviewController
     Route::post('books/{book}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::resource('reviews', ReviewController::class)
