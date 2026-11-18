@@ -7,6 +7,7 @@ use App\Models\Genre;
 use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class BookTest extends TestCase
@@ -425,5 +426,86 @@ class BookTest extends TestCase
 
         $response->assertSee('keyword=Laravel');
         $response->assertSee('sort=title');
+    }
+
+    public function test_isb_nから書籍情報を取得できる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        Http::fake([
+            'https://www.googleapis.com/books/v1/volumes*' => Http::response(
+                [
+                    'items' => [
+                        [
+                            'volumeInfo' => [
+                                'title' => 'テスト本',
+                                'authors' => ['著者'],
+                                'description' => '説明',
+                                'publishedDate' => '2026-01-01',
+                                'imageLinks' => ['thumbnail' => 'https://example.com/image.jpg',
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+                200
+            ),
+        ]);
+
+        $response = $this->get('/books/isbn/9784000000000');
+
+        $response->assertStatus(200);
+
+        $response->assertJson([
+            'title' => 'テスト本',
+            'author' => '著者',
+            'description' => '説明',
+            'published_at' => '2026-01-01',
+            'book_image' => 'https://example.com/image.jpg',
+        ]);
+    }
+
+    public function test_isb_n検索で書籍が見つからない場合エラーになる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        Http::fake([
+            'https://www.googleapis.com/books/v1/volumes*' => Http::response([
+                'items' => [],
+            ], 200),
+        ]);
+
+        $response = $this->get('/books/isbn/9784000000000');
+
+        $response->assertStatus(404);
+
+        $response->assertJson([
+            'error' => '書籍が見つかりませんでした。',
+        ]);
+    }
+
+    public function test_isb_n検索で_google_books_ap_iが通信失敗時にエラーになる(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
+
+        Http::fake([
+            'https://www.googleapis.com/books/v1/volumes*' => Http::response([
+                'error' => 'Server Error',
+            ], 500),
+        ]);
+
+        $response = $this->get('/books/isbn/9784000000000');
+
+        $response->assertStatus(500);
+
+        $response->assertJson([
+            'error' => '書籍情報の取得に失敗しました。時間をおいて再度お試しください。',
+        ]);
     }
 }
