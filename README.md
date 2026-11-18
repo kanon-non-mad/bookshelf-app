@@ -5,7 +5,8 @@
 書籍管理アプリです。
 
 ユーザーは書籍の登録・編集・削除、レビュー投稿、お気に入り登録、読書計画の管理などを行えます。
-また、API機能として書籍情報の取得・登録・更新・削除を提供しています。
+また、API機能として書籍CRUD APIを提供しています。
+ISBN検索機能ではGoogle Books APIを利用して書籍情報を取得できます。
 書籍一覧APIでは検索、ページネーション、並び替え、レビュー情報・ジャンル情報・評価情報の取得にも対応しています。
 
 ## 使用技術
@@ -26,7 +27,7 @@ Laravel Pintを使用してコード整形を行っています。
 確認コマンド:
 
 ```bash
-./vendor/bin/sail bin pint --test
+./vendor/bin/sail pint --test
 ```
 
 ## ER図
@@ -51,8 +52,18 @@ erDiagram
     reviews ||--o{ likes : receives
 
 ```
+**## 環境構築**
 
-## 環境構築
+### Google Books API設定
+
+ISBN検索機能ではGoogle Books APIを使用しています。
+
+`.env` に以下を設定してください。
+
+```env
+GOOGLE_BOOKS_API_URL=https://www.googleapis.com/books/v1/volumes
+GOOGLE_BOOKS_API_KEY=your_api_key
+```
 
 ### リポジトリを取得
 
@@ -70,6 +81,8 @@ cp .env.example .env
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 ./vendor/bin/sail artisan storage:link
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run build
 ```
 
 ## テスト
@@ -91,6 +104,7 @@ cp .env.example .env
 ## 応用機能
 
 - ISBN検索
+    - Google Books APIを利用してISBNから書籍情報を取得
 - 読書計画管理
     - 読書予定日の登録・変更
     - 読書完了状態への変更
@@ -156,14 +170,16 @@ Authorization: Bearer {token}
 
 ## テスト結果
 
-全テスト成功済み
+全113テスト成功済み
 
 ```bash
 ./vendor/bin/sail artisan test
-110 passed (249 assertions)
+
+113 passed (255 assertions)
 
 ./vendor/bin/sail artisan test --coverage
-Total: 81.8%
+
+Total: 82.4%
  (応用機能を含むカバレッジ)
 ```
 
